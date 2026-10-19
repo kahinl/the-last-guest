@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://u5kgt7sprfmx"
+path="res://.godot/imported/freesound_community-radio-static-6382 (mp3cut (mp3cut (mp3cut.net).mp3-4f96e68a6bbdcd0314391e7f636d8348.mp3str"
+
+[deps]
+
+source_file="res://assets/House/Floor1/Basement/freesound_community-radio-static-6382 (mp3cut (mp3cut (mp3cut.net).mp3"
+dest_files=["res://.godot/imported/freesound_community-radio-static-6382 (mp3cut (mp3cut (mp3cut.net).mp3-4f96e68a6bbdcd0314391e7f636d8348.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

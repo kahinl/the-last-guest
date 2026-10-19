@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b442dgt2kw0yl"]
+
+[ext_resource type="AudioStream" uid="uid://cybdrcb3xokq1" path="res://Sounds/soundreality-wind-blowing-457954.mp3" id="1_wind"]
+
+[node name="Wind" type="AudioStreamPlayer"]
+stream = ExtResource("1_wind")
+volume_db = -8.0

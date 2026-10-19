@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ngaiajn5g0uw"
+path="res://.godot/imported/freesound_community-door-open-close-45475 (mp3cut.net).mp3-16b84ce220cfdef69f805eb77e9cecb0.mp3str"
+
+[deps]
+
+source_file="res://assets/House/Floor1/floor1hallWay/freesound_community-door-open-close-45475 (mp3cut.net).mp3"
+dest_files=["res://.godot/imported/freesound_community-door-open-close-45475 (mp3cut.net).mp3-16b84ce220cfdef69f805eb77e9cecb0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

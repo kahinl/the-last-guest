@@ -1,0 +1,126 @@
+[gd_scene load_steps=7 format=3 uid="uid://bhbtpaille6os"]
+
+[ext_resource type="Script" uid="uid://ckp7d0rebu11t" path="res://globalTools/keypad.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dndvuuny5l3uo" path="res://globalTools/Hover.png" id="2_hover"]
+[ext_resource type="AudioStream" path="res://assets/House/Floor1/kitchen/u_a59y4emt1v-single-keypad-beep-433456.mp3" id="3_beep"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pad"]
+size = Vector3(0.26, 0.34, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pad"]
+size = Vector3(0.24, 0.32, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pad"]
+albedo_color = Color(0.16, 0.16, 0.18, 1)
+metallic = 0.4
+roughness = 0.55
+emission_enabled = true
+emission = Color(0.1, 0.35, 0.25, 1)
+emission_energy_multiplier = 0.4
+
+[node name="KeyPad" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.62, 4.5, 1.9)
+
+[node name="pad" type="StaticBody3D" parent="."]
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="pad"]
+shape = SubResource("BoxShape3D_pad")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="pad"]
+mesh = SubResource("BoxMesh_pad")
+surface_material_override/0 = SubResource("StandardMaterial3D_pad")
+
+[node name="play1" type="CanvasLayer" parent="pad"]
+layer = 2
+
+[node name="hover" type="Sprite2D" parent="pad/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 25
+visible = false
+
+[node name="Panel" type="Panel" parent="UI"]
+offset_left = 704.0
+offset_top = 229.0
+offset_right = 1204.0
+offset_bottom = 829.0
+
+[node name="Display" type="LineEdit" parent="UI/Panel"]
+offset_left = 60.0
+offset_top = 40.0
+offset_right = 440.0
+offset_bottom = 105.0
+editable = false
+max_length = 4
+alignment = 1
+
+[node name="Grid" type="GridContainer" parent="UI/Panel"]
+offset_left = 60.0
+offset_top = 130.0
+offset_right = 440.0
+offset_bottom = 480.0
+columns = 3
+
+[node name="K0" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "1"
+
+[node name="K1" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "2"
+
+[node name="K2" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "3"
+
+[node name="K3" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "4"
+
+[node name="K4" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "5"
+
+[node name="K5" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "6"
+
+[node name="K6" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "7"
+
+[node name="K7" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "8"
+
+[node name="K8" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "9"
+
+[node name="K9" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "C"
+
+[node name="K10" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "0"
+
+[node name="K11" type="Button" parent="UI/Panel/Grid"]
+custom_minimum_size = Vector2(96, 68)
+text = "OK"
+
+[node name="Close" type="Button" parent="UI/Panel"]
+offset_left = 60.0
+offset_top = 500.0
+offset_right = 440.0
+offset_bottom = 560.0
+text = "X"
+
+[node name="Beep" type="AudioStreamPlayer" parent="UI"]
+stream = ExtResource("3_beep")
+volume_db = -4.0

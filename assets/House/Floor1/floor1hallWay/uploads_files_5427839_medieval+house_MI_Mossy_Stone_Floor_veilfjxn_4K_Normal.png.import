@@ -1,0 +1,44 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://20nm4bkc5740"
+path.etc2="res://.godot/imported/uploads_files_5427839_medieval+house_MI_Mossy_Stone_Floor_veilfjxn_4K_Normal.png-e05b27d2cbce8ef56aab8e867504029f.etc2.ctex"
+metadata={
+"imported_formats": ["etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "d73b02d33784e8e0dd8101466768f9b6"
+}
+
+[deps]
+
+source_file="res://assets/House/Floor1/floor1hallWay/uploads_files_5427839_medieval+house_MI_Mossy_Stone_Floor_veilfjxn_4K_Normal.png"
+dest_files=["res://.godot/imported/uploads_files_5427839_medieval+house_MI_Mossy_Stone_Floor_veilfjxn_4K_Normal.png-e05b27d2cbce8ef56aab8e867504029f.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=1
+roughness/src_normal="res://try/uploads_files_5427839_medieval+house_MI_Mossy_Stone_Floor_veilfjxn_4K_Normal.png"
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

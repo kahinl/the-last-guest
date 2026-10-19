@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://kmj4aj2ffpqg"
+path="res://.godot/imported/ElevenLabs_2026-04-01T15_55_13_Rob - Tough & Calloused_pvc_sp106_s50_sb75_v3 (1).mp3-d79242d07f47392af78eed9060d421e5.mp3str"
+
+[deps]
+
+source_file="res://assets/Dream/ElevenLabs_2026-04-01T15_55_13_Rob - Tough & Calloused_pvc_sp106_s50_sb75_v3 (1).mp3"
+dest_files=["res://.godot/imported/ElevenLabs_2026-04-01T15_55_13_Rob - Tough & Calloused_pvc_sp106_s50_sb75_v3 (1).mp3-d79242d07f47392af78eed9060d421e5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

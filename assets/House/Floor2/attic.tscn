@@ -1,0 +1,291 @@
+[gd_scene format=4]
+
+[ext_resource type="PackedScene" uid="uid://b77cofg7wjxcx" path="res://assets/player/player.tscn" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://dndvuuny5l3uo" path="res://globalTools/Hover.png" id="2_hover"]
+[ext_resource type="Script" path="res://Scripts/inspect_item.gd" id="3_inspect"]
+[ext_resource type="Script" path="res://Scripts/scene_intro.gd" id="4_intro"]
+[ext_resource type="Script" path="res://Scripts/DOORS/generic_door.gd" id="5_door"]
+
+[sub_resource type="Environment" id="Environment_attic"]
+background_mode = 1
+background_color = Color(0.015, 0.015, 0.02, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.48, 0.38, 1)
+ambient_light_energy = 0.3
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.2, 0.145, 0.1, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_slab"]
+size = Vector3(9, 0.2, 9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_slab"]
+size = Vector3(9, 0.2, 9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallZ"]
+size = Vector3(9, 3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallZ"]
+size = Vector3(9, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wallX"]
+size = Vector3(0.2, 3, 9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wallX"]
+size = Vector3(0.2, 3, 9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ph_small"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ph_small"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ph_small"]
+albedo_color = Color(0.86, 0.72, 0.34, 1)
+emission_enabled = true
+emission = Color(0.86, 0.72, 0.34, 1)
+emission_energy_multiplier = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_ph_flat"]
+size = Vector3(0.55, 0.42, 0.06)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ph_flat"]
+size = Vector3(0.55, 0.42, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ph_flat"]
+albedo_color = Color(0.78, 0.8, 0.72, 1)
+emission_enabled = true
+emission = Color(0.78, 0.8, 0.72, 1)
+emission_energy_multiplier = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_ph_door"]
+size = Vector3(1, 2, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ph_door"]
+size = Vector3(1, 2, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ph_door"]
+albedo_color = Color(0.72, 0.24, 0.22, 1)
+emission_enabled = true
+emission = Color(0.72, 0.24, 0.22, 1)
+emission_energy_multiplier = 0.7
+
+[node name="attic" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_attic")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+light_color = Color(0.95, 0.85, 0.68, 1)
+light_energy = 0.5
+omni_range = 9.0
+
+[node name="floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+shape = SubResource("BoxShape3D_slab")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="ceiling" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ceiling"]
+shape = SubResource("BoxShape3D_slab")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ceiling"]
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="wallN" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wallN"]
+shape = SubResource("BoxShape3D_wallZ")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="wallN"]
+mesh = SubResource("BoxMesh_wallZ")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="wallS" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 4.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wallS"]
+shape = SubResource("BoxShape3D_wallZ")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="wallS"]
+mesh = SubResource("BoxMesh_wallZ")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="wallW" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wallW"]
+shape = SubResource("BoxShape3D_wallX")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="wallW"]
+mesh = SubResource("BoxMesh_wallX")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="wallE" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wallE"]
+shape = SubResource("BoxShape3D_wallX")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="wallE"]
+mesh = SubResource("BoxMesh_wallX")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="from_hallway" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 3)
+
+[node name="from_level0" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -3.6)
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 3)
+
+[node name="extraSpeech" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="line" type="Label" parent="extraSpeech"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 454.0
+offset_top = 786.0
+offset_right = 1454.0
+offset_bottom = 900.0
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="intro" type="Node" parent="."]
+script = ExtResource("4_intro")
+played_flag = "attic_speech_played"
+speech_key = "attic_1"
+
+[node name="heightMarks" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.4, 4.3)
+script = ExtResource("3_inspect")
+flag_name = "attic_2_seen"
+speech_key = "attic_2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="heightMarks"]
+shape = SubResource("BoxShape3D_ph_flat")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="heightMarks"]
+mesh = SubResource("BoxMesh_ph_flat")
+surface_material_override/0 = SubResource("StandardMaterial3D_ph_flat")
+
+[node name="play1" type="CanvasLayer" parent="heightMarks"]
+layer = 3
+
+[node name="hover" type="Sprite2D" parent="heightMarks/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")
+
+[node name="carvingTools" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.45, -2)
+script = ExtResource("3_inspect")
+flag_name = "attic_3_seen"
+speech_key = "attic_3"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="carvingTools"]
+shape = SubResource("BoxShape3D_ph_small")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="carvingTools"]
+mesh = SubResource("BoxMesh_ph_small")
+surface_material_override/0 = SubResource("StandardMaterial3D_ph_small")
+
+[node name="play1" type="CanvasLayer" parent="carvingTools"]
+layer = 3
+
+[node name="hover" type="Sprite2D" parent="carvingTools/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")
+
+[node name="bird2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.95, 0.45, -1.6)
+script = ExtResource("3_inspect")
+flag_name = "bird2_found"
+speech_key = "bird_2"
+counter_name = "birds_found"
+reward_key = "bird_all"
+reward_flag = "bird_all_seen"
+counter_target = 3
+destroy_on_pick = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="bird2"]
+shape = SubResource("BoxShape3D_ph_small")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="bird2"]
+mesh = SubResource("BoxMesh_ph_small")
+surface_material_override/0 = SubResource("StandardMaterial3D_ph_small")
+
+[node name="play1" type="CanvasLayer" parent="bird2"]
+layer = 3
+
+[node name="hover" type="Sprite2D" parent="bird2/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")
+
+[node name="toHallwayDoor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1, 4.3)
+script = ExtResource("5_door")
+target_scene = "res://assets/House/Floor2/hallWay/hallWay.tscn"
+spawn_name = "from_attic"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="toHallwayDoor"]
+shape = SubResource("BoxShape3D_ph_door")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="toHallwayDoor"]
+mesh = SubResource("BoxMesh_ph_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_ph_door")
+
+[node name="play1" type="CanvasLayer" parent="toHallwayDoor"]
+layer = 3
+
+[node name="hover" type="Sprite2D" parent="toHallwayDoor/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")
+
+[node name="toLevel0Door" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -4.4)
+script = ExtResource("5_door")
+target_scene = "res://assets/Backrooms/level0.tscn"
+spawn_name = "from_attic"
+required_flags = "attic_3_seen"
+need_key = "level0_locked"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="toLevel0Door"]
+shape = SubResource("BoxShape3D_ph_door")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="toLevel0Door"]
+mesh = SubResource("BoxMesh_ph_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_ph_door")
+
+[node name="play1" type="CanvasLayer" parent="toLevel0Door"]
+layer = 3
+
+[node name="hover" type="Sprite2D" parent="toLevel0Door/play1"]
+visible = false
+position = Vector2(947, 494)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("2_hover")

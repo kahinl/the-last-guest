@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dylyffuex6cro"
+path="res://.godot/imported/forza1903-barkod-okutma-bip-sesi-328417 (mp3cut.net).mp3-8ca159fe77d7d862039227b53af3c583.mp3str"
+
+[deps]
+
+source_file="res://assets/House/Floor1/kitchen/forza1903-barkod-okutma-bip-sesi-328417 (mp3cut.net).mp3"
+dest_files=["res://.godot/imported/forza1903-barkod-okutma-bip-sesi-328417 (mp3cut.net).mp3-8ca159fe77d7d862039227b53af3c583.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

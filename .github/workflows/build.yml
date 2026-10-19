@@ -1,0 +1,61 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2-stable
+          include-templates: true
+
+      - name: Desktop texture formats (phone imports are etc2)
+        run: find . -name "*.import" -not -path "./.godot/*" -exec sed -i 's/etc2_astc/s3tc_bptc/g; s/\.etc2\./.s3tc./g' {} +
+
+      - name: Import project
+        run: godot --headless --import || true
+
+      - name: Export Windows
+        run: |
+          mkdir -p build
+          godot --headless --export-release "Windows Desktop" build/TheLastGuest.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TheLastGuest-windows
+          path: build/
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2-stable
+          include-templates: true
+
+      - name: Debug keystore
+        run: keytool -genkeypair -keyalg RSA -keysize 2048 -validity 10000 -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Import project
+        run: godot --headless --import || true
+
+      - name: Export Android APK
+        run: |
+          mkdir -p build
+          godot --headless --export-debug "Android" build/TheLastGuest.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TheLastGuest-android
+          path: build/

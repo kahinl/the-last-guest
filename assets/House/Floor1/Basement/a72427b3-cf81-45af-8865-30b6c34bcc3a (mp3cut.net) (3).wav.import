@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bxnwqbc53fmix"
+path="res://.godot/imported/a72427b3-cf81-45af-8865-30b6c34bcc3a (mp3cut.net) (3).wav-4c91e945f22322ec19465e730f9f1874.sample"
+
+[deps]
+
+source_file="res://assets/House/Floor1/Basement/a72427b3-cf81-45af-8865-30b6c34bcc3a (mp3cut.net) (3).wav"
+dest_files=["res://.godot/imported/a72427b3-cf81-45af-8865-30b6c34bcc3a (mp3cut.net) (3).wav-4c91e945f22322ec19465e730f9f1874.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

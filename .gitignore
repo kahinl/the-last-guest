@@ -1,0 +1,14 @@
+windows_export/
+linux.export/
+.godot/
+*.rar
+*.zip
+*.7z
+*.glb
+*.gltf
+*.fbx
+*.obj
+*.pck
+*.exe
+/build/
+docs/

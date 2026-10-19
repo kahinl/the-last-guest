@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://dsqwr27xktti"]
+
+[ext_resource type="Script" uid="uid://bcvh0t4glwkwr" path="res://Scripts/pause_menu.gd" id="1_xr37p"]
+[ext_resource type="AudioStream" uid="uid://cuve423oqt4ih" path="res://assets/main/dragon-studio-button-press-382713 (mp3cut.net).mp3" id="2_36u3x"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1346836645]
+process_mode = 3
+layer = 30
+script = ExtResource("1_xr37p")
+
+[node name="Background" type="CanvasLayer" parent="." unique_id=1416331601]
+layer = 30
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Background" unique_id=507531373]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="Pause" type="Label" parent="." unique_id=1111661271]
+offset_left = 750.0
+offset_top = 333.0
+offset_right = 844.0
+offset_bottom = 378.0
+theme_override_font_sizes/font_size = 55
+text = "P_1"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=448380509]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -266.0
+offset_top = -100.0
+offset_right = 230.0
+offset_bottom = 184.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer" unique_id=10292094]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "P_2"
+
+[node name="MainMenuButton" type="Button" parent="VBoxContainer" unique_id=730423903]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "P_3"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=928500716]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "P_4"
+
+[node name="ButtonPressed" type="AudioStreamPlayer" parent="." unique_id=641598591]
+process_mode = 3
+stream = ExtResource("2_36u3x")

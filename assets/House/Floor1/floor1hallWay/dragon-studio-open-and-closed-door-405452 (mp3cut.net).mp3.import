@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dctqukm4i10vs"
+path="res://.godot/imported/dragon-studio-open-and-closed-door-405452 (mp3cut.net).mp3-524b962b8b9b767daf6f91ffaa624b3f.mp3str"
+
+[deps]
+
+source_file="res://assets/House/Floor1/floor1hallWay/dragon-studio-open-and-closed-door-405452 (mp3cut.net).mp3"
+dest_files=["res://.godot/imported/dragon-studio-open-and-closed-door-405452 (mp3cut.net).mp3-524b962b8b9b767daf6f91ffaa624b3f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://mbg3r0sohhhw"]
+
+[ext_resource type="AudioStream" uid="uid://7pfx0egjx5xg" path="res://Sounds/freesound_community-heavy_breathing-34377.mp3" id="1_comfy"]
+
+[node name="Comfy" type="AudioStreamPlayer"]
+stream = ExtResource("1_comfy")
+volume_db = -14.0

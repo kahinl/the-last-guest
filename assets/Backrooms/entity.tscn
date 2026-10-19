@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=4]
+
+[ext_resource type="Script" path="res://Scripts/backrooms_entity.gd" id="e0"]
+[ext_resource type="Resource" path="res://assets/backrooms/meshes/monster.mesh.res" id="e1"]
+[ext_resource type="Resource" path="res://assets/backrooms/textures/Zombie_Body_Diffuse.res" id="e2"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/175210__minigunfiend__creatures-loud-buzz.ogg.res" id="e3"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/Mutant_Scream.ogg.res" id="e4"]
+[ext_resource type="Resource" path="res://assets/backrooms/textures/VHS_Monster.res" id="e5"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_body"]
+albedo_texture = ExtResource("e2")
+roughness = 0.85
+
+[sub_resource type="SphereShape3D" id="Sphere_trigger"]
+radius = 3.5
+
+[node name="entity" type="Node3D"]
+script = ExtResource("e0")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 1.5, 0)
+visible = false
+mesh = ExtResource("e1")
+surface_material_override/0 = SubResource("Mat_body")
+
+[node name="Trigger" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Trigger"]
+shape = SubResource("Sphere_trigger")
+
+[node name="Growl" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("e3")
+volume_db = -3.0
+max_distance = 22.0
+
+[node name="Scream" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("e4")
+volume_db = 0.0
+
+[node name="Scare" type="CanvasLayer" parent="."]
+layer = 10
+visible = false
+
+[node name="Black" type="ColorRect" parent="Scare"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Tex" type="TextureRect" parent="Scare/Black"]
+self_modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("e5")
+expand_mode = 1
+stretch_mode = 6

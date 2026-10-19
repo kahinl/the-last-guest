@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://haq1641xg3p"
+path="res://.godot/imported/a55b9e2e-badf-48f0-b2ad-d4da0fed609a (mp3cut (mp3cut.net).wav-ede3e471255fed95944a28790cc3687c.sample"
+
+[deps]
+
+source_file="res://assets/House/Floor2/hallWay/a55b9e2e-badf-48f0-b2ad-d4da0fed609a (mp3cut (mp3cut.net).wav"
+dest_files=["res://.godot/imported/a55b9e2e-badf-48f0-b2ad-d4da0fed609a (mp3cut (mp3cut.net).wav-ede3e471255fed95944a28790cc3687c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

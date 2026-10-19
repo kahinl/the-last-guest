@@ -1,0 +1,140 @@
+[gd_scene format=4 uid="uid://m3b05gxq2fg8"]
+
+[ext_resource type="PackedScene" uid="uid://e4xbldb1dqhj" path="res://assets/trees/treeT2.glb" id="1_tbia5"]
+[ext_resource type="Texture2D" uid="uid://vax3ijoxmetq" path="res://assets/trees/treeT2_0.png" id="2_vr2xw"]
+
+[sub_resource type="Shader" id="Shader_tbia5"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_disabled, diffuse_burley, specular_schlick_ggx, unshaded;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_nearest_mipmap, repeat_enable;
+uniform float alpha_scissor_threshold : hint_range(0.0, 1.0, 0.001);
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_nearest_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_nearest_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+group_uniforms wind;
+uniform sampler2D noise_tex;
+uniform float wind_speed = .1;
+uniform float wind_strength = .01;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+	vec3 GLOBAL_VERTEX = (MODEL_MATRIX * vec4(VERTEX, 1.)).xyz;
+	float offset = TIME * wind_speed;
+	float noise = texture(noise_tex, vec2(GLOBAL_VERTEX.x-offset)).r;
+	noise -= .5;
+	noise *= wind_strength;
+	VERTEX.xy += noise * length(VERTEX.y) * length(VERTEX.xz);
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	ALPHA *= albedo.a * albedo_tex.a;
+	ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nnyuh"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vr2xw"]
+noise = SubResource("FastNoiseLite_nnyuh")
+seamless = true
+seamless_blend_skirt = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6boap"]
+resource_name = "TreeAtlas"
+render_priority = 0
+shader = SubResource("Shader_tbia5")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("2_vr2xw")
+shader_parameter/alpha_scissor_threshold = 0.55226237
+shader_parameter/albedo_texture_size = Vector2i(64, 128)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_vr2xw")
+shader_parameter/wind_speed = 0.02
+shader_parameter/wind_strength = 0.001
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_l4rt5"]
+_surfaces = [{
+"aabb": AABB(-100, -1.140629, -100, 200, 521.3342, 200),
+"format": 34896613377,
+"index_count": 114,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAGgARABIAGgAbABEAGwAVABEAHAAaABIAHAASABYAHQAbABoAHgAaABwAHgAdABoAHwAcABYAFAAdAB4AGAAUAB4AFAAQAB0AGAAeACAAIAAeABwAIAAcAB8AFwAYACAAHwAWABkAFwAgACEAIQAgAB8AEwAXACEAIgAfABkAIQAfACIAIgAZABUAGwAiABUAIwAhACIAIwAiABsAEwAhACMAEAATACMAHQAjABsAEAAjAB0ABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A"),
+"lods": [18.779171, PackedByteArray("AAABAAIAAAADAAEAEAARABIAEAATABEAFAAQABIAEwAVABEAFAASABYAEwAXABUAGAAUABYAFwAZABUAGAAWABkAFwAYABkABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A"), 202.32088, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A")],
+"name": "TreeAtlas",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("/3//////AAD/fzseAAAAAP9/Ox7//wAA/3///wAAAACB2v//gdoAAH0lOx59JQAAgdo7HoHaAAB9Jf//fSUAAP//////fwAAAAA7Hv9/AAD//zse/38AAAAA////fwAAgdr//30lAAB9JTsegdoAAIHaOx59JQAAfSX//4HaAAC5aQAAz3kAAP9/3cW3eQAAuXndxUZ+AADnfwAAsWkAADJyAADikwAARYbdxUZ+AAAefN3Fp4UAABaWAADPeQAAnY0AAOKTAADgg93Fp4UAAP90ERO/fAAA/38RE8F0AAAyeRETrYkAAPJu1QYQewAAcnXVBhGPAADLhhETrYkAAHqK1QYRjwAA+ZDVBhB7AAD/ihETv3wAAPZ/1Qa0bgAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4veq6"]
+resource_name = "Sketchfab_Scene_Plane_014_TreeAtlas_0"
+_surfaces = [{
+"aabb": AABB(-100, -1.140629, -100, 200, 521.3342, 200),
+"attribute_data": PackedByteArray("wQDL/tK2BADBAAQA0rbL/sEAy/7StgQAwQAEANK2y/7BAMv+0rYEAMEABADStsv+wQDL/tK2BADBAAQA0rbL/s3KZAI03936P9Xd+h7fZAJ4zWQCouLd+u3W3fpb5WQCretkAg3Z3fpc5d36kNJkAlvlZALt1t36ouLd+njNZAIe32QCKend+jTf3fpw82QCIdVVGjTfVRrS1lUaquJVGm7lVRr62FUaquJVGtLWVRo031UaR+lVGsLu+Qos3/kK4tH5CjXk+QqK1fkKzuj5CjXk+Qri0fkKLN/5CpbP+Qos3/kKR+lVGjTfVRrC7vkKNeT5CtLWVRqq4lUa4tH5Cs7o+Qr62FUabuVVGorV+Qri0fkKquJVGtLWVRo15PkKls/5CjTfVRoh1VUaLN/5Cg=="),
+"format": 34896613399,
+"index_count": 114,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAJAARABIAJAAlABEAJgAVABYAJgAnABUAKAAZABoAKAApABkAKgAdAB4AKgArAB0ALAAhACIALAAtACEAIAAuAC8AIAAjAC4AHAAwADEAHAAfADAAGAAyADMAGAAbADIAFAA0ADUAFAAXADQAEAA2ADcAEAATADYAOAA5ADoAOAA7ADkAPAA9AD4APAA/AD0AQABBAEIAQABDAEEARABFAEYARABHAEUASABJAEoASABLAEkABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A"),
+"lods": [18.779171, PackedByteArray("AAABAAIAAAADAAEAEAARABIAEAATABEAFAAVABYAFAAXABUAGAAZABoAGAAbABkAHAAdAB4AHAAfAB0AIAAhACIAIAAjACEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A"), 202.32088, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0A")],
+"material": SubResource("ShaderMaterial_6boap"),
+"name": "TreeAtlas",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 76,
+"vertex_data": PackedByteArray("/3///////z//fzseAAD/P/9/Ox7///8//3///wAA/z+B2v//gdr/H30lOx59Jf8fgdo7HoHa/x99Jf//fSX/H///////fwAAAAA7Hv9/AAD//zse/38AAAAA////fwAAgdr//30l/x99JTsegdr/H4HaOx59Jf8ffSX//4Ha/x+5aQAAz3lB9/9/3cW3ean/uXndxUZ+qf/nfwAAsWlB9zJyAADik/r5uXndxUZ+yv8efN3Fp4XK/7lpAADPefr5nY0AAOKTO3UefN3Fp4Wlf+CD3cWnhaV/MnIAAOKTO3UWlgAAz3n1S+CD3cWnhcxMRYbdxUZ+zEydjQAA4pP1S+d/AACxaWX3RYbdxUZ+qf//f93Ft3mp/xaWAADPeWX3/3QRE798qf//fxETwXSp/zJ5EROticr//3QRE798yv/LhhETrYmlfzJ5EROtiaV//4oRE798zEzLhhETrYnMTP9/ERPBdKn//4oRE798qf/5kNUGEHtl9/Z/1Qa0bmX3eorVBhGP9Uv5kNUGEHv1S3J11QYRjzt1eorVBhGPO3XybtUGEHv6+XJ11QYRj/r59n/VBrRuQffybtUGEHtB9/Z/1Qa0bh76/4oRE798Hvr/fxETwXQe+vmQ1QYQex76+ZDVBhB7cEzLhhETrYlwTP+KERO/fHBMeorVBhGPcEx6itUGEY8teTJ5EROtiS15y4YRE62JLXlyddUGEY8teXJ11QYRjxr8/3QRE798GvwyeRETrYka/PJu1QYQexr88m7VBhB7Efr/fxETwXQR+v90ERO/fBH69n/VBrRuEfr/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f////3////9/////f///ifz/Xdz/gWDc/4Fgifz/XUH3LzKt/7o1rf+6NUH3LzL+//9/////f////3/+//9/D53VEEuBwABLgcAAD53VEAneZ4OB4CKAgeAigAneZ4Pc/4Fg3P+BYK3/ujWt/7o1////f////39LgcAAS4HAAIHgIoCB4CKACd5ngwneZ4MPndUQD53VEP7//3/+//9/QfcvMkH3LzKJ/P9difz/XdbeV4LW3leC1t5XgtbeV4KNlOcLjZTnC42U5wuNlOcL////f////3////9/////fzn6bzM5+m8zOfpvMzn6bzOi/dNeov3TXqL9016i/dNe")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_l4rt5")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tbia5"]
+height = 58.759644
+radius = 20.0
+
+[node name="Sketchfab_Scene" unique_id=1979119001 instance=ExtResource("1_tbia5")]
+
+[node name="Plane_014_TreeAtlas_0" parent="Sketchfab_model/f98001989ed24b7391b2fc7b17dee413_fbx/RootNode/Plane_014" parent_id_path=PackedInt32Array(664567381) index="0" unique_id=1089518558]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+mesh = SubResource("ArrayMesh_4veq6")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_model/f98001989ed24b7391b2fc7b17dee413_fbx/RootNode/Plane_014/Plane_014_TreeAtlas_0" index="0" unique_id=222263343]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_model/f98001989ed24b7391b2fc7b17dee413_fbx/RootNode/Plane_014/Plane_014_TreeAtlas_0/StaticBody3D" index="0" unique_id=698439159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 28.379822, 0)
+shape = SubResource("CylinderShape3D_tbia5")

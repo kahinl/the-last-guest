@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://b475i8i3iuv7d"]
+
+[ext_resource type="AudioStream" uid="uid://dw4up6gk7oyew" path="res://Sounds/spinopel-creaky-floorboards-281297.mp3" id="1_wood"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/Footstep_Concrete_01.ogg.res" id="2_concrete"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/Footstep_Metal_01.ogg.res" id="3_metal"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/Footstep_WaterOverKnee_01.ogg.res" id="4_water"]
+
+[node name="Steps" type="Node"]
+
+[node name="wood_footsteps" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_wood")
+volume_db = -10.0
+
+[node name="concrete_footsteps" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_concrete")
+volume_db = -8.0
+
+[node name="metal_footsteps" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_metal")
+volume_db = -8.0
+
+[node name="water_footsteps" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_water")
+volume_db = -6.0
