@@ -50,7 +50,8 @@ jobs:
       - name: Free disk space (APK signing needs headroom)
         run: |
           df -h
-          sudo rm -rf /usr/share/dotnet /opt/hostedtoolcache/CodeQL /usr/local/lib/android/ndk* || true
+          # NOTE: do NOT remove /usr/share/dotnet -- the Godot mono editor needs it for Android export
+          sudo rm -rf /opt/hostedtoolcache/CodeQL /usr/local/lib/android/ndk* /usr/local/share/powershell || true
           docker system prune -af || true
           sudo rm -rf /var/lib/apt/lists/* || true
           df -h
