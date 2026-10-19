@@ -47,6 +47,14 @@ jobs:
       - name: Debug keystore
         run: keytool -genkeypair -keyalg RSA -keysize 2048 -validity 10000 -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
 
+      - name: Free disk space (APK signing needs headroom)
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet /opt/hostedtoolcache/CodeQL /usr/local/lib/android/ndk* || true
+          docker system prune -af || true
+          sudo rm -rf /var/lib/apt/lists/* || true
+          df -h
+
       - name: Import project
         run: godot --headless --import || true
 
