@@ -8,6 +8,8 @@ ilgili script, grid değişince üreteç** çalışmalı.
 | `build_assets.gd` | `src/` png/ogg/obj → `.res` (doku/ses/mesh) + prosedürel tavan/panel | `godot --headless --path . --script res://tools/build_assets.gd` |
 | `gen_levels.py` | grid → `level0/1/2/hub.tscn` + BFS erişilebilirlik kontrolü | `python3 tools/gen_levels.py` |
 | `build_translations.gd` | `lang.csv` → `lang.{en,ar,tr}.translation` | `godot --headless --path . --script res://tools/build_translations.gd` |
+| `audit_chain.py` | kapı→hedef→spawn→bayrak→konuşma zinciri + eksik dosya denetimi | `python3 tools/audit_chain.py` |
+| `shot.tscn` + `shot.gd` | sanal ekranda (Xvfb) sahne render edip PNG ekran görüntüsü alır | `xvfb-run -a godot --path . --rendering-method gl_compatibility tools/shot.tscn -- "res://SEHNE.tscn" "/tmp/cikti"` |
 
 ---
 

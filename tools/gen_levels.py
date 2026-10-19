@@ -196,13 +196,13 @@ def emit_level(name, spec):
     for (orient, fixed, mid_cell, L) in wall_runs:
         wm, ws, wmat = wall_geo[("z", L) if orient in ("N", "S") else ("x", L)]
         if orient == "N":
-            wx, wz = cell_world(fixed, mid_cell, W, Hh); ox, oz = wx, (mid_cell - (Hh - 1) / 2.0) * S - S / 2.0
+            ox, oz = (mid_cell - (W - 1) / 2.0) * S, (fixed - (Hh - 1) / 2.0) * S - S / 2.0
         elif orient == "S":
-            wx, wz = cell_world(fixed, mid_cell, W, Hh); ox, oz = wx, (mid_cell - (Hh - 1) / 2.0) * S + S / 2.0
+            ox, oz = (mid_cell - (W - 1) / 2.0) * S, (fixed - (Hh - 1) / 2.0) * S + S / 2.0
         elif orient == "W":
-            wx, wz = cell_world(mid_cell, fixed, W, Hh); ox, oz = (mid_cell - (W - 1) / 2.0) * S - S / 2.0, wz
+            ox, oz = (fixed - (W - 1) / 2.0) * S - S / 2.0, (mid_cell - (Hh - 1) / 2.0) * S
         else:
-            wx, wz = cell_world(mid_cell, fixed, W, Hh); ox, oz = (mid_cell - (W - 1) * 0 - (W - 1) / 2.0) * S + S / 2.0, wz
+            ox, oz = (fixed - (W - 1) / 2.0) * S + S / 2.0, (mid_cell - (Hh - 1) / 2.0) * S
         wn += 1
         nodes.append("\n".join([
             '[node name="wall%d" type="StaticBody3D" parent="."]' % wn,
@@ -408,15 +408,23 @@ def emit_level(name, spec):
     sp_id = b.x(PLAYER, "PackedScene", PLAYER_UID)
     spawn = spec["spawn"]
     sx, sz = cell_world(spawn["cx"], spawn["cz"], W, Hh)
+
+    def spawn_yaw(cx, cz):
+        for d, ry in (("N", 0.0), ("E", math.pi / 2), ("S", math.pi), ("W", -math.pi / 2)):
+            nx, nz = {"N": (cx, cz - 1), "E": (cx + 1, cz), "S": (cx, cz + 1), "W": (cx - 1, cz)}[d]
+            if is_open(grid, nx, nz):
+                return ry
+        return 0.0
+
     nodes.append('[node name="SpawnPoints" type="Node3D" parent="."]')
     for sm in spec.get("spawns", []):
         mx, mz = cell_world(sm["cx"], sm["cz"], W, Hh)
         nodes.append("\n".join([
             '[node name="%s" type="Marker3D" parent="SpawnPoints"]' % sm["name"],
-            "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, %g, 0.3, %g)" % (mx, mz)]))
+            "transform = " + tr(0, spawn_yaw(sm["cx"], sm["cz"]), mx, 0.3, mz)]))
     nodes.append("\n".join([
         '[node name="Player" parent="." instance=ExtResource("%s")]' % sp_id,
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, %g, 0.3, %g)" % (sx, sz)]))
+        "transform = " + tr(0, spawn_yaw(spawn["cx"], spawn["cz"]), sx, 0.3, sz)]))
 
     # --- extraSpeech + intro ---
     nodes.append('\n[node name="extraSpeech" type="CanvasLayer" parent="."]\nlayer = 2')
@@ -518,28 +526,28 @@ P0 = dict(wall="res://assets/backrooms/textures/Wallpaper2.res",
           floor="res://assets/backrooms/textures/Floor_carpet_clean_BaseColor.res",
           ceil="res://assets/backrooms/textures/CeilingTiles.res",
           wall_scale="3,2,3", floor_scale="5,1,5", ceil_scale="6,1,6",
-          bg="0.02, 0.019, 0.015, 1", ambc="0.52, 0.47, 0.33, 1", ambe=0.28,
-          fog_e=0.35, fog_d=0.035, fog_c="0.85, 0.78, 0.5, 1",
-          light_c="1, 0.98, 0.88, 1", light_e=0.9, light_range=9.0,
+          bg="0.02, 0.019, 0.015, 1", ambc="0.52, 0.47, 0.33, 1", ambe=0.55,
+          fog_e=0.5, fog_d=0.018, fog_c="0.85, 0.78, 0.5, 1",
+          light_c="1, 0.98, 0.88, 1", light_e=1.4, light_range=9.5,
           door_c="0.55, 0.3, 0.16, 1")
 P1 = dict(wall="res://assets/backrooms/textures/esp_concrete_black.res",
           floor="res://assets/backrooms/textures/esp_concrete_floor.res",
           ceil="res://assets/backrooms/textures/CeilingTiles.res",
           wall_scale="2,1.5,2", floor_scale="4,1,4", ceil_scale="6,1,6",
-          bg="0.008, 0.009, 0.012, 1", ambc="0.35, 0.38, 0.45, 1", ambe=0.10,
-          fog_e=0.25, fog_d=0.06, fog_c="0.5, 0.55, 0.6, 1",
-          light_c="0.8, 0.83, 0.95, 1", light_e=0.5, light_range=7.0,
+          bg="0.008, 0.009, 0.012, 1", ambc="0.35, 0.38, 0.45, 1", ambe=0.26,
+          fog_e=0.25, fog_d=0.03, fog_c="0.5, 0.55, 0.6, 1",
+          light_c="0.8, 0.83, 0.95, 1", light_e=1.1, light_range=8.0,
           door_c="0.3, 0.32, 0.38, 1")
 P2 = dict(wall="res://assets/backrooms/textures/Metal_albedo.res",
           floor="res://assets/backrooms/textures/Metal_albedo.res",
           ceil="res://assets/backrooms/textures/Vents.res",
           wall_scale="2,2,2", floor_scale="3,1,3", ceil_scale="4,1,4",
-          bg="0.004, 0.008, 0.01, 1", ambc="0.2, 0.35, 0.4, 1", ambe=0.07,
-          fog_e=0.2, fog_d=0.08, fog_c="0.4, 0.6, 0.65, 1",
-          light_c="0.6, 0.92, 1, 1", light_e=0.42, light_range=6.0,
+          bg="0.004, 0.008, 0.01, 1", ambc="0.2, 0.35, 0.4, 1", ambe=0.2,
+          fog_e=0.2, fog_d=0.04, fog_c="0.4, 0.6, 0.65, 1",
+          light_c="0.6, 0.92, 1, 1", light_e=0.95, light_range=7.0,
           door_c="0.45, 0.25, 0.12, 1")
-PH = dict(P0); PH["ambc"] = "0.55, 0.5, 0.4, 1"; PH["ambe"] = 0.35
-PH["fog_d"] = 0.02; PH["door_c"] = "0.2, 0.6, 0.3, 1"
+PH = dict(P0); PH["ambc"] = "0.55, 0.5, 0.4, 1"; PH["ambe"] = 0.6
+PH["fog_d"] = 0.015; PH["door_c"] = "0.2, 0.6, 0.3, 1"
 
 A = "res://assets/backrooms/audio/"
 MP = "res://assets/backrooms/meshes/"

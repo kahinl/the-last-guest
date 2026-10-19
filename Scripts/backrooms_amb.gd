@@ -19,6 +19,15 @@ func _ready() -> void:
 	_rng.randomize()
 	if surface != "":
 		GameState.step_surface = surface
+	# Backrooms'a giren oyuncu idare eder: fener artik her zaman cepte
+	GameState.flashpicked = true
+	if not GameState.flashlight_on:
+		GameState.flashlight_on = true
+		var p := get_parent().get_node_or_null("Player") as Node3D
+		if p:
+			var f := p.get_node_or_null("Head/Camera3D/flash")
+			if f:
+				f.visible = true
 	_schedule(whisper_player, 22.0, 55.0)
 	_schedule(growl_player, 40.0, 90.0)
 	_schedule(sfx_player, 15.0, 40.0)
