@@ -71,10 +71,20 @@ func _process(delta: float) -> void:
 func _schedule(path: NodePath, lo: float, hi: float) -> void:
 	if path.is_empty():
 		return
-	while true:
-		await get_tree().create_timer(_rng.randf_range(lo, hi)).timeout
-		if not is_inside_tree():
-			return
-		var p := get_node_or_null(path) as AudioStreamPlayer3D
-		if p and not p.playing:
-			p.play()
+	# Timer dugumu: sahne kapaninca dugumle birlikte gider. Onceki hali
+	# `while true: await create_timer(...)` idi; o kuyruk sahne kapandiktan sonra
+	# da hi saniyeye (buyuk: 90 s) kadar askida kaliyordu.
+	var t := Timer.new()
+	t.one_shot = true
+	t.wait_time = _rng.randf_range(lo, hi)
+	t.timeout.connect(_on_amb_timeout.bind(path, lo, hi, t))
+	add_child(t)
+	t.start()
+
+
+func _on_amb_timeout(path: NodePath, lo: float, hi: float, t: Timer) -> void:
+	var p := get_node_or_null(path) as AudioStreamPlayer3D
+	if p and not p.playing:
+		p.play()
+	t.wait_time = _rng.randf_range(lo, hi)
+	t.start()

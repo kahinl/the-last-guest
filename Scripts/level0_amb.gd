@@ -12,6 +12,7 @@ var _rng := RandomNumberGenerator.new()
 var _breath_played := false
 var _light: OmniLight3D = null
 var _flicker_acc: float = 0.0
+var _whisper_timer: Timer = null
 
 ##  20 Hz titrek yeter (0.004/60Hz -> 0.012/20Hz), her karede OmniLight
 ##  uniform guncellemesi telefonda bosuna isik.
@@ -49,11 +50,24 @@ func _process(delta: float) -> void:
 func _schedule() -> void:
 	if _whispers.is_empty():
 		return
-	await get_tree().create_timer(_whispers.pop_front()).timeout
+	# Timer dugumu: eskiden `await create_timer(...)` zinciriydi, sahne kapandiktan
+	# sonra da 60 sn'ye kadar askida coroutine/timer tasiyordu.
+	_whisper_timer = Timer.new()
+	_whisper_timer.one_shot = true
+	_whisper_timer.timeout.connect(_on_whisper_timeout)
+	add_child(_whisper_timer)
+	_whisper_timer.wait_time = _whispers.pop_front()
+	_whisper_timer.start()
+
+
+func _on_whisper_timeout() -> void:
 	var wp := get_node_or_null(whisper_player) as AudioStreamPlayer3D
 	if wp:
 		wp.play()
-	_schedule()
+	if _whispers.is_empty():
+		return
+	_whisper_timer.wait_time = _whispers.pop_front()
+	_whisper_timer.start()
 
 
 func _on_breath_area_entered(body: Node3D) -> void:

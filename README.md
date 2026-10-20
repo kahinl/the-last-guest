@@ -256,6 +256,13 @@ o günki hâle göre.
    düğümünde 3 adet `while true: await create_timer(...)`. Sahne kapatıldıktan sonra
    90 sn'ye kadar askıda coroutine/timer tutuyor (`is_inside_tree()` kontrolü var, o
    yüzden çökmüyor). `Timer` düğümüne çevrilmeli.
+   **KAPANDI** — `backrooms_amb._schedule()` artik `Timer` dugumu (one_shot, her
+   atista yeni rastgele sure). Calisma aninda dogrulandi: level0 `amb`'inde 2 Timer
+   (40.9 s / 85.5 s, ikisi de aralikta) kosuyor.
+   > **Beklenmedik:** `Scripts/level0_amb.gd` **hicbir sahne tarafindan kullanilmiyor**
+   > (level0'un `amb` dugumu `backrooms_amb.gd` tasir). Dosya ya silinmeli ya da
+   > nefes-alani tetigi gibi davranislari baska bir yere tasinmali — kendiliginden
+   > silinmedi, sahipli bir icerik olabilir.
 10. **`project.godot`** — `:37` `window/size/mode=4` (exclusive fullscreen) Android'de
     anlamsız; `:139-140` hem S3TC/BPTC hem ETC2/ASTC içe aktarma açık (ithalat işini
     ikiye katlar; telefonda yalnızca ETC2/ASTC gerekir); `:136` Jolt fiziği sadece
