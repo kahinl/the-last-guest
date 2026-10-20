@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://owaruqfsyvm1"]
 
 [ext_resource type="Script" uid="uid://cavxt1owfhb2j" path="res://assets/main/main_menu.gd" id="1_ttt7c"]
+[ext_resource type="Script" path="res://Scripts/crt_overlay.gd" id="99_crt"]
 [ext_resource type="Texture2D" uid="uid://krx3k8mvbirm" path="res://assets/sky/images.jpeg" id="1_uh5fd"]
 [ext_resource type="Texture2D" uid="uid://b5c8mlo8bjm5v" path="res://assets/House/Floor2/hallWay/hallway.png" id="1_up1by"]
 [ext_resource type="Texture2D" uid="uid://2bo3hd6piigw" path="res://assets/House/Floor2/hallWay/hallway_6.png" id="2_uh5fd"]
@@ -884,6 +885,7 @@ layer = 0
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer2" unique_id=1453030027]
 material = SubResource("ShaderMaterial_lnsuq")
+script = ExtResource("99_crt")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -915,6 +917,14 @@ layout_mode = 2
 theme_type_variation = &"FlatButton"
 theme_override_styles/pressed = SubResource("StyleBoxFlat_mx6dw")
 script = ExtResource("21_fbhw1")
+
+[node name="crt" type="CheckButton" parent="Buttons/VBoxContainer"]
+self_modulate = Color(0.71629614, 0.71629626, 0.71629596, 1)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+button_pressed = true
+text = "MENU_CRT"
+alignment = 0
 
 [node name="credits" type="Button" parent="Buttons/VBoxContainer" unique_id=906938121]
 self_modulate = Color(0.71629614, 0.71629626, 0.71629596, 1)

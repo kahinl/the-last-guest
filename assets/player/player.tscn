@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bx2af0q5yqx6f" path="res://Scripts/player.gd" id="1_471qr"]
 [ext_resource type="Texture2D" uid="uid://cnarngi63dkgc" path="res://globalTools/BHover.png" id="2_h6syq"]
 [ext_resource type="Shader" uid="uid://cf8vvfhnw0j2f" path="res://assets/player/player.gdshader" id="3_v2miy"]
+[ext_resource type="Script" path="res://Scripts/crt_overlay.gd" id="99_crt"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_j5ygh"]
 
@@ -349,6 +350,7 @@ texture = ExtResource("2_h6syq")
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=295666791]
 material = SubResource("ShaderMaterial_v2miy")
+script = ExtResource("99_crt")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

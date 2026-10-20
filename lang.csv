@@ -2,6 +2,7 @@ keys,en,ar,tr
 MENU_PLAY,PLAY,العب,OYNA
 MENU_CREDITS,CREDITS,الاعتمادات,EMEKLER
 MENU_QUIT,QUIT,خروج,ÇIKIŞ
+MENU_CRT,CRT EFFECT,تأثير CRT,EKRAN EFEKTİ
 creditsss,"A game by Mono. This is my first game, thank you for playing.",لعبة من صنع Mono. هذه لعبتي الأولى، شكرًا للعبك.,"Mono'nun bir oyunu. Bu benim ilk oyunum, oynadığın için teşekkürler."
 interaction,[E],[E],[E]
 forest_s1,YOU: uh....Where am I ?,أنت: آه.... أين أنا؟,SEN: Ah.... Neredeyim ben?

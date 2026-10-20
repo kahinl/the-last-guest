@@ -14,6 +14,10 @@ func set_flag(name: String, value: Variant) -> void:
 var interaction_locked = false
 var speech1_played = false
 var flashpicked = false
+
+##  Tam ekran CRT/scanline overlay'i. Varsayilan ACIK (sanat karari); ana
+##  menudeki ayar kapatiyor, cihazda hiz = goruntu trade-off'u oyuncuya birakildi.
+var crt_enabled = true
 var flashlight_on = false
 var floor2Key_picked = false
 var letter1_picked = false
