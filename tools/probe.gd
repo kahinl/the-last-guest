@@ -109,14 +109,23 @@ func _probe_point(space: PhysicsDirectSpaceState3D, scene_file: String, x: float
 	q.exclude = _player_rids()
 	var hits := space.intersect_shape(q, 8)
 	var blockers: Array[String] = []
+	var steps := 0
 	for h in hits:
-		blockers.append(String(h.collider.name))
+		var cn := String(h.collider.name)
+		#  Basamaklar istisna: CharacterBody3D adimlarin uzerinde yurur, ama
+		#  statik kapsul testi her adimda bir sonraki basamaga deger. Merdiven
+		#  ustundeki spawn "DURULMAZ" sayilmaz; yalnizca sayisi bildirilir.
+		if cn.begins_with("stairs"):
+			steps += 1
+			continue
+		blockers.append(cn)
 	var sink: float = marker_y - floor_y - SPAWN_FOOT_Y
-	print("PROBE %-16s %-18s x=%.2f z=%.2f  zemin=%.3f  marker_gomuk=%.2fm  snap_y=%.2f  blok=%s%s  %s" % [
+	print("PROBE %-16s %-18s x=%.2f z=%.2f  zemin=%.3f  marker_gomuk=%.2fm  snap_y=%.2f  blok=%s%s%s  %s" % [
 		scene_file, what, x, z, floor_y, sink, y,
-		"EVET" if not hits.is_empty() else "hayir",
-		" (" + ", ".join(blockers) + ")" if not hits.is_empty() else "",
-		"<< DURULMAZ" if not hits.is_empty() else "ok"])
+		"EVET" if not blockers.is_empty() else "hayir",
+		" (" + ", ".join(blockers) + ")" if not blockers.is_empty() else "",
+		"  basamak=%d" % steps if steps > 0 else "",
+		"<< DURULMAZ" if not blockers.is_empty() else "ok"])
 
 
 func _report_player(sc: Node3D, scene_file: String) -> void:

@@ -128,6 +128,47 @@ kahkaha, yüzey ayak sesleri; ve `monster.obj` varlık modeli.
 
 ---
 
+## 2026-10-20 akşamı oturumu (devam)
+
+Aşağıdaki `Kalan işler` listesi bir önceki oturumun **tespit** listesidir; bu bölüm
+onların durumunu günceller.
+
+- **KRİTİK, listede yoktu: `player.gd` hiç derlenmiyordu.** `a21e16c` (perf) commit'i
+  `_stop_footsteps(fade)` içinde `AudioStreamPlayer.stop(fade)` yazmış; Godot 4'te
+  `stop()` argüman kabul etmediği için dosya parse edilemiyor ve **Player script'i
+  hiçbir sahnede yüklenmiyordu** (kontrolcü ölü). `eff532b` ile düzeltildi; fade
+  geri getirilmedi çünkü çağrıldığı yer hareketin bittiği her fizik karesi.
+  **Doğrulama zinciri bunu neden yakalamadı:** `probe`/`shot` çıktısı `grep ^PROBE`
+  ile filtrelendiği için `SCRIPT ERROR` satırları logda duruyordu ama hiç görünmüyordu.
+  Bundan sonra doğrulamada en az bir kez `grep -E "SCRIPT ERROR|Parse|Failed to load"`
+  koşulacak (bu iki araçta artık **sıfır** satır olmalı).
+- A1 ve A2'nin hol yarısı kapandı; `hallWay.tscn` probe'ta **7/7 spawn ok**.
+- `tools/shot.gd` iki seçenek kazandı: `bright` (ortam ışığını yükseltir; otel
+  seviyeleri el feneri olmadan zifiri karanlık render oluyordu) ve
+  `cam=x:z[:y[:ry]]` (kamera istenen noktaya konur). Yerleşim teşhisi ikisiz yapılamadı.
+
+### Hol kapılarının gerçek hikâyesi (A1'in kök nedeni tahminden farklıydı)
+
+`hallWay` içindeki `toRoom3Door` (-4.08, 1.15, **-3.2**) ve `toAtticDoor`
+(**-21.5**, 1.18, 3.7) G28'de **tahminî koordinatla** konmuştu ve ikisi de holün
+zemininin dışında, boşlukta duruyordu: oyuncu onlara **ulaşamıyordu**, yani room3 ve
+çatı katı içeriği kilitliydi. Holün yürünebilir bandı `x ∈ [-19, -4] , z ∈ [-0.7, 3.2]`
+(+ banyo kolu `x≈-4.2, z→8`); güney duvar yüzü `z≈-1.2`, kuzey duvar yüzü `z≈3.55`.
+
+- `toRoom3Door` → güney duvarda pilaster bölmesine: **(-8.05, 1.02, -1.35)**.
+- `toAtticDoor` → kuzey duvardaki **modelde gerçekten var olan ahşap kapıya**:
+  **(-18.9, 1.02, 3.5)** (kare ile doğrulandı; kapı yaprağı x≈-19.6..-18.7).
+- `Scripts/f_room3.gd` room3'ten çıkışı **room1.tscn**'e gönderiyordu (kopyala-yapıştır
+  izi; room1'in `SpawnPoints`'i bile yok, oyuncu `Player` düğümüne düşüyordu). Artık
+  `hallWay` → `from_room3` zinciri kurulu ve `from_room3` marker'ı bu yüzden yaşıyor.
+- Otel kapı hacimleri **görünmez ama kalın**: `toRoom1/toLibrary/...` kutuları
+  1 × 3.43 × 1.77 m. Varış marker'ları bu yüzden duvara ~0.6 m mesafede durmalı;
+  eskiden -0.94/-0.98'deydiler ve kutunun içindelerdi (A2'nin "küçük itme"si buydu).
+  `from_room1`/`from_library` → z=-0.55, `from_bath` → x=-4.20, `from_room2` → z=2.40,
+  `from_attic` → (-18.6, 2.5), `from_room3` → (-8.05, -0.55).
+
+---
+
 ## Kalan işler — 2026-10-20 devir notu
 
 Bu oturumda bulunan ama **yapılmayan** her şey. Değer sırasına göre; satır numaraları
@@ -138,14 +179,20 @@ o günki hâle göre.
 1. **`hallWay.tscn` → `SpawnPoints/from_room3` altında 2 m içinde zemin YOK**
    (x=-4.12, z=-2.40). Room 3'ten hol'e dönen oyuncu dünyanın dışına düşer.
    Hol çarpışma zemini bu eşikte bitiyor; komşu `from_room1` (z=-0.94) sağlam.
-   `probe` çıktısındaki tek "zemin yok" satırı bu.
+   **KAPANDI** — kök neden tahminden farklıydı, bkz. yukarıdaki "Hol kapılarının
+   gerçek hikâyesi". Asıl sorun marker değil, kapının kendisinin boşlukta olmasıydı.
 2. **Otel spawn'ları kapı/eset gövdelerinin içinde kalıyor** (probe `<< DURULMAZ`):
    `hallWay`: `from_room2`→`toRoom2`, `from_room1`→`toRoom1`, `from_library`→`toLibrary`,
    `from_bath`→`toBath`, `from_attic`→6×`StaticBody3D`;
    `floor1hallWay`: `default1`→`frontDoorExit`+`handel`, `from_kitchen`→`roomDoor2`,
    `from_floor2`→`f2Door` (marker bulduğu yüzeyin 0.9 m altında).
-   Hepsi varışta küçük bir itme üretir; görsel olarak test edilip tek tek karar verilmeli
-   (kapı gövdesi incedse zararsız olabilir).
+   **KAPANDI** — hepsi tasindi; iki hol artik 10/10 spawn `blok=hayir`. Ayrinti
+   yukaridaki "Hol kapilarinin gercek hikayesi" bolumunde. `from_floor2` ayrica
+   merdiven basagindaydi: marker `f2Door` yapriginin ALTINDAYDI (y=4.37), isin
+   zemine degil kapiya calisiyordu → `(4.6, 4.65, -1.2)`.
+   **Arac notu:** `probe.gd` artik `stairs*` carpismalarini `DURULMAZ` saymiyor
+   (`basamak=N` olarak ayri basiyor). Merdivende duran her kapsul bir sonraki
+   basamaga degmek zorunda; aksi halde her merdiven spawn'i yanlis pozitif veriyor.
 3. **Paletler artık çift tonlama yapıyor.** Doku düzeltmesinden önce tint rengi tek
    başına taşıyordu; şimdi gerçek dokunun üstüne çarpılıyor → `P0` zeytin yeşiline
    kaydı (`wall_tint="1, 0.9, 0.55"` + zaten sarı `Wallpaper2`), `P1` çok karanlık
@@ -155,6 +202,10 @@ o günki hâle göre.
 4. **`level0.tscn` → `from_level1` spawn'ı `l0key` kaidesinin üstünde**
    (x=24, z=24; zemin y=0.75, marker 1.13 m altında). Snap oyuncuyu 1.43 m'ye, yani
    piramidin üstüne koyuyor. Marker komşu boş hücreye taşınmalı.
+   **KAPANDI** — `gen_levels.py` içinde `from_level1` (13,13)→(12,13); yeniden
+   üretildi, probe `snap_y=0.68 blok=hayir`. Not: `l0key` `pick:true` oldugu icin
+   kadide basilmis bir oyun hata vermezdi (anahtar alinmadan Level 1 acilmiyor);
+   yine de kirilganlik kaldirildi.
 
 ### B. Performans (bulundu, dokunulmadı)
 

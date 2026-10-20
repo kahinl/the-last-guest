@@ -13,6 +13,6 @@ func _on_body_exited(body):
 func _process(_delta):
 	if entered and Input.is_action_just_pressed("ui_accept"):
 		FadeLayer.fade_and_change_scene(
-			"res://assets/House/Floor2/Bedrooms/room1.tscn",
+			"res://assets/House/Floor2/hallWay/hallWay.tscn",
 			"from_room3"
 		)
