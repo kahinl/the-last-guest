@@ -125,3 +125,87 @@ oyunda (yukarıdaki komut) temiz derlenir. Gerçek hata ararken bu satırları y
 `backrooms_mod/audio_new`'ten seçilip `.res`'e çevrildi: klasik duvar kâğıdı, nemli halı,
 beton/metal dokuları; flüoresan vızıltısı, mutant hırlama/bağırma, uzak HELP, jeneratör,
 kahkaha, yüzey ayak sesleri; ve `monster.obj` varlık modeli.
+
+---
+
+## Kalan işler — 2026-10-20 devir notu
+
+Bu oturumda bulunan ama **yapılmayan** her şey. Değer sırasına göre; satır numaraları
+o günki hâle göre.
+
+### A. Görsel / oynanış hataları
+
+1. **`hallWay.tscn` → `SpawnPoints/from_room3` altında 2 m içinde zemin YOK**
+   (x=-4.12, z=-2.40). Room 3'ten hol'e dönen oyuncu dünyanın dışına düşer.
+   Hol çarpışma zemini bu eşikte bitiyor; komşu `from_room1` (z=-0.94) sağlam.
+   `probe` çıktısındaki tek "zemin yok" satırı bu.
+2. **Otel spawn'ları kapı/eset gövdelerinin içinde kalıyor** (probe `<< DURULMAZ`):
+   `hallWay`: `from_room2`→`toRoom2`, `from_room1`→`toRoom1`, `from_library`→`toLibrary`,
+   `from_bath`→`toBath`, `from_attic`→6×`StaticBody3D`;
+   `floor1hallWay`: `default1`→`frontDoorExit`+`handel`, `from_kitchen`→`roomDoor2`,
+   `from_floor2`→`f2Door` (marker bulduğu yüzeyin 0.9 m altında).
+   Hepsi varışta küçük bir itme üretir; görsel olarak test edilip tek tek karar verilmeli
+   (kapı gövdesi incedse zararsız olabilir).
+3. **Paletler artık çift tonlama yapıyor.** Doku düzeltmesinden önce tint rengi tek
+   başına taşıyordu; şimdi gerçek dokunun üstüne çarpılıyor → `P0` zeytin yeşiline
+   kaydı (`wall_tint="1, 0.9, 0.55"` + zaten sarı `Wallpaper2`), `P1` çok karanlık
+   (`esp_concrete_black` × mavi-gri tint). `P0/P1/P2/PH` için `shot.tscn` karesine
+   bakarak kalibre et. **level2 ve hub kareleri hiç değerlendirilemedi** (seans orada
+   kesildi).
+4. **`level0.tscn` → `from_level1` spawn'ı `l0key` kaidesinin üstünde**
+   (x=24, z=24; zemin y=0.75, marker 1.13 m altında). Snap oyuncuyu 1.43 m'ye, yani
+   piramidin üstüne koyuyor. Marker komşu boş hücreye taşınmalı.
+
+### B. Performans (bulundu, dokunulmadı)
+
+5. **Tam ekran CRT shader'ı — tek seferde en büyük GPU maliyeti.**
+   `assets/player/player.tscn:351` içindeki `CanvasLayer/ColorRect`,
+   `assets/player/player.gdshader` `hint_screen_texture` kullanıyor: her karede tam
+   framebuffer kopyası + piksel başına 3 ekran örneği (1908×958). Player sahnesi 19
+   seviyede instance'lı, `main_menu.tscn:886`'da da aynı overlay var.
+   **Kaldırılmadı: aperture-grille/scanline bilinçli bir sanat kararı.** Yapılacak
+   seçenekler: ayarlarda kapatılabilir yapmak, ya da yalnızca TV/rüya/kaset
+   sahnelerinde açmak.
+6. **`Scripts/inspect_item.gd:32-37`** — `req` bayrağı için `_process`'te her karede
+   `GameState.get(...)` yoklaması. Yalnızca 3 nesne `req` kullanıyor
+   (`hallWay.tscn:1291`, `room2.tscn:5721`, `level2.tscn:1359`) ve sonsuza dek yoklar.
+   Doğrusu: bayrak setter'ından görünürlüğü itmek. Ayrıca iş yapmayan `_process`
+   stub'ları: `kitchen.gd:21`, `dreamfadeout.gd:40`, `main_menu.gd:15`.
+7. **`Scripts/monster.gd:24-26`** — `activated` değilken bile `_physics_process` her
+   Basement karesinde koşuyor. `_ready()`'de `set_physics_process(false)` +
+   `activate_monster()`'da açmak yeterli.
+8. **`Scripts/flashlight.gd:14-18` ve `cassette.gd:19-22`** — `queue_free()`'den
+   **sonra** `await speech.animation_finished` var; nesne serbest kaldığı için
+   kuyruğun devamındaki `speech.stop()` hiç çalışmıyor. Bilerek dokunulmadı:
+   `queue_free()`'i sona almak, nesnenin ses uzunluğu kadar dünyada görünür kalmasına
+   yol açar. Doğru çözüm: `visible=false` + çarpışmayı hemen kapat, free'i sonda yap.
+9. **`Scripts/backrooms_amb.gd:60-69` ve `level0_amb.gd` `_schedule()`** — her amb
+   düğümünde 3 adet `while true: await create_timer(...)`. Sahne kapatıldıktan sonra
+   90 sn'ye kadar askıda coroutine/timer tutuyor (`is_inside_tree()` kontrolü var, o
+   yüzden çökmüyor). `Timer` düğümüne çevrilmeli.
+10. **`project.godot`** — `:37` `window/size/mode=4` (exclusive fullscreen) Android'de
+    anlamsız; `:139-140` hem S3TC/BPTC hem ETC2/ASTC içe aktarma açık (ithalat işini
+    ikiye katlar; telefonda yalnızca ETC2/ASTC gerekir); `:136` Jolt fiziği sadece
+    kapsül-durağın geometri için kullanılıyor (specülatif, ana iş parçacığı maliyeti);
+    `:19` boş ses yolu düzeni (her ses Master'da).
+
+### C. İş/araç tarafında kalanlar
+
+11. **`docs/` .gitignore'da** — `BILINEN_SORUNLAR.md`, `DOSYA_HARITASI.md`, `EKLEMELER.md`,
+    `EDITORDEN_YAPILACAKLAR.md`, `HIKAYE.md` **hiçbir zaman commit'lenmemiş**; sadece bu
+    cihazda duruyorlar. Cihaz değişirse gider. Bu yüzden bu bölüm `README.md`'ye yazıldı.
+12. **Hiçbir şey GitHub'a gönderilmedi.** 4 commit yerelde: `bb9b8f6` spawn sistemi,
+    `a21e16c` perf, `43e323a` dokular, `ba1befb` doküman. İki remote var:
+    `origin` (moon18-eng/After-the-threshold) ve `beyhan` (kahinl/a-beyhans-story).
+13. **`/root/After-the-threshold` artık gereksiz** — içindeki commit'lenmemiş iş
+    `TheLastGuest`'e taşındı; diğer tek `.godot` önbelleği de orada. Silmek güvenli ama
+    `.godot`'u yeniden üretmek bu cihazda uzun sürer.
+14. **Termux'un düşmesi yarı çözüldü** — uyku kilidi artık otomatik alınıyor
+    (Termux `~/.bashrc`), `tmux 3.6` kurulu ve `/root/bin/agent` son seansı tmux
+    içinde devam ettiriyor. **Android taraf hâlâ elle:** Ayarlar → Uygulamalar →
+    Termux → Pil → Sınırsız (WIKO T60 / Android 13). Ayrıca Termux `~/.bashrc:5`'te
+    düz metin bir Google API anahtarı duruyor.
+15. **Uzun iş her zaman `nohup … > log` ile koşulmalı.** Bash aracının kendi
+    background görevleri CLI süreciyle birlikte ölüyor (bu sekansta level1 sonrası
+    o yüzden yarım kaldı); `nohup` ile başlatılan render ise CLI düştükten sonra
+    bitmişti.
