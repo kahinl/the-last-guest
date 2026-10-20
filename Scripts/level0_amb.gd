@@ -10,6 +10,12 @@ extends Node3D
 var _whispers: Array[float] = []
 var _rng := RandomNumberGenerator.new()
 var _breath_played := false
+var _light: OmniLight3D = null
+var _flicker_acc: float = 0.0
+
+##  20 Hz titrek yeter (0.004/60Hz -> 0.012/20Hz), her karede OmniLight
+##  uniform guncellemesi telefonda bosuna isik.
+const FLICKER_STEP := 0.05
 
 
 func _ready() -> void:
@@ -19,17 +25,25 @@ func _ready() -> void:
 	var area := get_node_or_null(breath_area) as Area3D
 	if area:
 		area.body_entered.connect(_on_breath_area_entered)
+	if not flicker_light.is_empty():
+		_light = get_node_or_null(flicker_light) as OmniLight3D
+		if _light == null:
+			push_warning("level0_amb: flicker_light cozulemedi: %s" % flicker_light)
 	_schedule()
 
 
 func _process(delta: float) -> void:
-	var light := get_node_or_null(flicker_light) as OmniLight3D
-	if light:
-		var t := Time.get_ticks_msec() / 1000.0
-		var f := 0.82 + 0.1 * sin(t * 11.0) + 0.06 * sin(t * 37.0)
-		if _rng.randf() < 0.004:
-			f *= 0.15
-		light.light_energy = maxf(0.05, f)
+	if _light == null:
+		return
+	_flicker_acc += delta
+	if _flicker_acc < FLICKER_STEP:
+		return
+	_flicker_acc = 0.0
+	var t := Time.get_ticks_msec() / 1000.0
+	var f := 0.82 + 0.1 * sin(t * 11.0) + 0.06 * sin(t * 37.0)
+	if _rng.randf() < 0.012:
+		f *= 0.15
+	_light.light_energy = maxf(0.05, f)
 
 
 func _schedule() -> void:

@@ -47,6 +47,8 @@ func _on_trigger(body: Node3D) -> void:
 	if _state != 0 or body.name != "Player":
 		return
 	_state = 1
+	# Tetikleyen govde zaten Player; _player_node() icin agac gezmesine gerek yok.
+	_player = body
 	if _body:
 		_body.visible = true
 	var g := get_node_or_null(growl_path) as AudioStreamPlayer3D

@@ -13372,7 +13372,7 @@ texture = ExtResource("70_mphct")
 transform = Transform3D(-1, 0, -8.742276e-08, 0, 0.9999997, 0, 8.742278e-08, 0, -0.9999998, -1.888, 4.855, -2.17)
 
 [node name="from_backrooms" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 0, 0.7, 1)
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 3, 0.7, 1)
 
 [connection signal="body_entered" from="Path3D/PathFollow3D/Monser/Area3D" to="Path3D/PathFollow3D/Monser" method="_on_area_3d_body_entered"]
 

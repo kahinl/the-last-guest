@@ -41,6 +41,13 @@ var current_interactable = null
 # =================== Freeze Flag ===================
 var frozen = false
 
+# =================== Ayak sesi ===
+# NodePath'leri her fizik karesinde cozmek yerine bir kez cozuluyor.
+var _foot_main: AudioStreamPlayer = null
+var _foot_dream: AudioStreamPlayer = null
+var _foot_surfaces: Array[AudioStreamPlayer] = []
+var _scene_path: String = ""
+
 # ==========================================================
 # READY (SPAWN + MOUSE CAPTURE)
 # ==========================================================
@@ -48,6 +55,15 @@ func _ready():
 	GameState.interaction_locked = false
 	speed = WALK_SPEED 
 	floor_max_angle = deg_to_rad(75.0)
+
+	var _root := get_tree().current_scene
+	_scene_path = _root.scene_file_path if _root else ""
+	_foot_main = get_node_or_null("../footSteps") as AudioStreamPlayer
+	_foot_dream = get_node_or_null("../steps") as AudioStreamPlayer
+	for sn in ["wood_footsteps", "concrete_footsteps", "metal_footsteps", "water_footsteps"]:
+		var n := Steps.get_node_or_null(sn) as AudioStreamPlayer
+		if n:
+			_foot_surfaces.append(n)
 
 	# إخفاء الماوس فوراً عند بدء اللعبة
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -169,38 +185,23 @@ func _physics_process(delta):
 			velocity.z = direction.z * speed
 			
 			# صوت الخطوات
-			var cs := get_tree().current_scene
-			var csp := cs.scene_file_path if cs else ""
-			if csp == "res://assets/main/main.tscn":
-				var main_steps = get_node_or_null("../footSteps")
-				if main_steps and not main_steps.playing:
-					main_steps.play(4)
+			if _scene_path == "res://assets/main/main.tscn":
+				if _foot_main and not _foot_main.playing:
+					_foot_main.play(4)
+			elif _scene_path == "res://assets/Dream/dream.tscn":
+				if _foot_dream and not _foot_dream.playing:
+					_foot_dream.play(0.87)
 			else:
-				if csp == "res://assets/Dream/dream.tscn":
-					var steps = get_node_or_null("../steps")
-					if steps and not steps.playing:
-						steps.play(0.87)
-					
-				else:
-					var snode := Steps.get_node_or_null(_step_node_name())
-					if snode == null:
-						snode = Steps.get_node("wood_footsteps")
-					if snode and not snode.playing:
-						snode.play(2)
+				var snode := Steps.get_node_or_null(_step_node_name())
+				if snode == null:
+					snode = Steps.get_node("wood_footsteps")
+				if snode and not snode.playing:
+					snode.play(2)
 		else:
-			var main_steps = get_node_or_null("../footSteps")
-			if main_steps: 
-				await get_tree().create_timer(0.20).timeout
-				main_steps.stop()
-			
-			var steps = get_node_or_null("../steps")
-			if steps: 
-				await get_tree().create_timer(0.25).timeout
-				steps.stop()
-			for sn in ["wood_footsteps", "concrete_footsteps", "metal_footsteps", "water_footsteps"]:
-				var n = Steps.get_node_or_null(sn)
-				if n:
-					n.stop()
+			# Eskiden burada create_timer + await vardi: bos dururken her fizik
+			# karesinde 2 timer doguyordu ve asagidaki move_and_slide + girdi
+			# okuma ~0.45 s erteleniyordu, yani E/F basinlari kaybolabiliyordu.
+			_stop_footsteps(0.2)
 
 			velocity.x = lerp(velocity.x, 0.0, delta * 7.0)
 			velocity.z = lerp(velocity.z, 0.0, delta * 7.0)
@@ -268,12 +269,18 @@ func activate():
 func freeze():
 	frozen = true
 	# إيقاف أصوات الخطوات عند التجميد
-	var main_steps = get_node_or_null("../footSteps")
-	if main_steps: main_steps.stop()
-	for sn in ["wood_footsteps", "concrete_footsteps", "metal_footsteps", "water_footsteps"]:
-		var n = Steps.get_node_or_null(sn)
-		if n:
-			n.stop()
+	_stop_footsteps(0.0)
+
+
+##  fade > 0: adim sesi aniden kesilmesin, kisa bir gecisle sussun.
+func _stop_footsteps(fade: float) -> void:
+	if _foot_main and _foot_main.playing:
+		_foot_main.stop(fade)
+	if _foot_dream and _foot_dream.playing:
+		_foot_dream.stop(fade)
+	for n in _foot_surfaces:
+		if n.playing:
+			n.stop(fade)
 
 
 func _step_node_name() -> String:

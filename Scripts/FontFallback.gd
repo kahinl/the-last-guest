@@ -14,9 +14,9 @@ func _ready() -> void:
 	_patch_tree(get_tree().root)
 
 func _on_node_added(node: Node) -> void:
+	# Agac boyunca node_added her dugum icin ayrica calisiyor; alt agaci tekrar
+	# taramak sahne yuklemesini O(N^2)'ye ceviriyordu (level0: 383 dugum).
 	_patch_node(node)
-	for child in node.get_children():
-		_patch_tree(child)
 
 func _patch_tree(node: Node) -> void:
 	_patch_node(node)

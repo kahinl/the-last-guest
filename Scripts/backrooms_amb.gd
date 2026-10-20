@@ -13,6 +13,12 @@ extends Node3D
 
 var _rng := RandomNumberGenerator.new()
 var _sanity_frac: float = 0.0
+var _light: OmniLight3D = null
+var _flicker_acc: float = 0.0
+
+##  Titrek 20 Hz'de yeter; 60 Hz'de her karede OmniLight uniform guncellemesi
+##  level0'daki 11 isik icin bosuna GPU'ya yazilmak demek.
+const FLICKER_STEP := 0.05
 
 
 func _ready() -> void:
@@ -35,6 +41,10 @@ func _ready() -> void:
 	_schedule(whisper_player, 22.0, 55.0)
 	_schedule(growl_player, 40.0, 90.0)
 	_schedule(sfx_player, 15.0, 40.0)
+	if not flicker_light.is_empty():
+		_light = get_node_or_null(flicker_light) as OmniLight3D
+		if _light == null:
+			push_warning("backrooms_amb: flicker_light cozulemedi: %s" % flicker_light)
 
 
 func _process(delta: float) -> void:
@@ -45,16 +55,17 @@ func _process(delta: float) -> void:
 		if _sanity_frac >= 1.0:
 			GameState.sanity = maxi(0, GameState.sanity - 1)
 			_sanity_frac -= 1.0
-	if flicker_light.is_empty():
+	if flicker_light.is_empty() or _light == null:
 		return
-	var light := get_node_or_null(flicker_light) as OmniLight3D
-	if light == null:
+	_flicker_acc += delta
+	if _flicker_acc < FLICKER_STEP:
 		return
+	_flicker_acc = 0.0
 	var t := Time.get_ticks_msec() / 1000.0
 	var f := 0.8 + 0.12 * sin(t * 11.0) + 0.06 * sin(t * 37.0)
-	if _rng.randf() < 0.006:
+	if _rng.randf() < 0.018:
 		f *= 0.12
-	light.light_energy = maxf(0.05, f)
+	_light.light_energy = maxf(0.05, f)
 
 
 func _schedule(path: NodePath, lo: float, hi: float) -> void:
