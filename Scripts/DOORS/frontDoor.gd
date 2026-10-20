@@ -19,6 +19,7 @@ func interact() -> void:
 
 	await Speech.say(line, "door_leave_1")
 	GameState.ending_leave_done = true
+	GameState.last_ending = "leave"
 	FadeLayer.fade_and_change_scene("res://assets/main/main.tscn", "default")
 
 

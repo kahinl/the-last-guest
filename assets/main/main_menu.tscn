@@ -765,6 +765,31 @@ color = Color(0, 0, 0, 1)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer" unique_id=1687270222]
 libraries/ = SubResource("AnimationLibrary_mx6dw")
 
+[node name="Epilogue" type="CanvasLayer" parent="."]
+layer = 5
+visible = false
+
+[node name="Black" type="ColorRect" parent="Epilogue"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Line" type="Label" parent="Epilogue"]
+offset_left = 200.0
+offset_top = 420.0
+offset_right = 1708.0
+offset_bottom = 640.0
+theme_override_fonts/font = ExtResource("15_fbhw1")
+theme_override_font_sizes/font_size = 42
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1983151182]
 anchors_preset = 15
 anchor_right = 1.0

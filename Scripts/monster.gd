@@ -147,6 +147,7 @@ func die():
 	# SON A: karartma baslamadan once son sozler (G14)
 	if not GameState.ending_letgo_done:
 		GameState.ending_letgo_done = true
+		GameState.last_ending = "letgo"
 		await get_tree().create_timer(2.0).timeout
 		await Speech.say(_line(), "ending_letgo_1")
 		await Speech.say(_line(), "ending_letgo_2")
@@ -164,6 +165,7 @@ func _ending_holdon():
 	hide_prompt()
 
 	GameState.ending_holdon_done = true
+	GameState.last_ending = "holdon"
 
 	var player = $"../../../Player"
 	if player and player.has_method("freeze"):

@@ -120,4 +120,10 @@ var phone_last_done = false
 var ending_letgo_done = false
 var ending_holdon_done = false
 var ending_leave_done = false
+
+##  Hangi son AZ once oynandi ("letgo" / "holdon" / "leave").
+##  *_done bayraklari birden fazla son icin ayni anda true kalabiliyor
+##  (ayni oturumda iki son gorulurse), o yuzden epilog icin ayri tutuluyor;
+##  main_menu.gd oynattiktan sonra temizler.
+var last_ending = ""
 var is_frontkey_installed = false
