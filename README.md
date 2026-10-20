@@ -47,7 +47,27 @@ Sonuç olarak:
   `AudioStreamOggVorbis`, `ArrayMesh`).
 - Ham girdiler `assets/backrooms/src/` altında durur (png, ogg, obj).
 
+> **Tuzak (2026-10-20'de düzeltildi):** `build_assets.gd` dokuları ham `Image` olarak
+> kaydediyordu; `albedo_texture` ise `Texture2D` bekler. Image reddedildiği için tüm
+> Backrooms yüzeyleri **dokusuz, düz boyalı** render oluyordu ve hata hiçbir yerde
+> görünmüyordu. Artık `.res` içinde `ImageTexture` var (POT ölçeklerde mipmap üretilir)
+> ve sahneler `type="Texture2D"` ile çekiyor. Yeni doku eklerken `Image` değil
+> **her zaman `_save_tex()`** kullan.
+
 Yeni bir png/ogg/obj eklerken **import'u beklemeyin** — aşağıdaki üreteci çalıştırın.
+
+---
+
+## Nerede çalışılır
+
+| Yer | Ne |
+|---|---|
+| `/root/TheLastGuest` | **aktif git deposu** + `.godot` önbelleği. Tüm doğrulama burada koşar. |
+| `/storage/emulated/0/After-the-threshold` | telefon kopyası, **yalnızca kaynak** (`.git`/`.godot` yok). Android'deki Godot editörü bunu açar. |
+
+Telefon depolaması büyük/küçük harf duyarlı **değil**: repoda `assets/Backrooms/`
+(sahneler) ve `assets/backrooms/` (doku/ses/mesh) ayrı klasörlerken telefona geçince
+tek klasöre birleşir. Çalışıyor ama yeni dosya eklerken bu ikiliği bil.
 
 ---
 
@@ -85,7 +105,14 @@ godot --headless --path . --script res://tools/build_translations.gd
 
 ```
 godot --headless --path . --quit-after 8        # oyun açılıyor mu (script/parse hatası?)
+python3 tools/audit_chain.py                    # kapı→hedef→spawn→bayrak zinciri, 0 hata olmalı
+godot --headless --path . tools/probe.tscn -- spawns res://assets/Backrooms/level0.tscn
+xvfb-run -a godot --path . --rendering-method gl_compatibility tools/shot.tscn -- "res://assets/Backrooms/level0.tscn" "/tmp/level0"
 ```
+
+Sıra: **smoke → audit_chain → probe → shot**. `audit_chain` kapıların *var olmayan*
+spawn adlarını yakalar, `probe` o spawn'ların *fiziksel olarak durulabilir* olduğunu
+yakalar, `shot` ise gözle bakılacak kareyi verir (doku/tint/sis ancak böyle doğrulanır).
 Not: `--script` modunda autoload'lar (GameState/FadeLayer/Wind) mevcut **olmadığından**
 her script "Identifier not found: GameState" verir — bu **yanlış pozitiftir**; gerçek
 oyunda (yukarıdaki komut) temiz derlenir. Gerçek hata ararken bu satırları yok say.
