@@ -274,6 +274,9 @@ o günki hâle göre.
 11. **`docs/` .gitignore'da** — `BILINEN_SORUNLAR.md`, `DOSYA_HARITASI.md`, `EKLEMELER.md`,
     `EDITORDEN_YAPILACAKLAR.md`, `HIKAYE.md` **hiçbir zaman commit'lenmemiş**; sadece bu
     cihazda duruyorlar. Cihaz değişirse gider. Bu yüzden bu bölüm `README.md`'ye yazıldı.
+    **KAPANDI** — `.gitignore`'dan cikarildi, 5 dosya commit'lendi (1266 satir, 88 KB;
+    hassas icerik taramasi temiz). Artik `docs/` ile README ayni seyleri tekrarlamasın:
+    kalici/teknik bilgi docs/'a, oturum devir notu README'ye.
 12. **Hiçbir şey GitHub'a gönderilmedi.** 4 commit yerelde: `bb9b8f6` spawn sistemi,
     `a21e16c` perf, `43e323a` dokular, `ba1befb` doküman. İki remote var:
     `origin` (moon18-eng/After-the-threshold) ve `beyhan` (kahinl/a-beyhans-story).

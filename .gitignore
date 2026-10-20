@@ -11,4 +11,3 @@ linux.export/
 *.pck
 *.exe
 /build/
-docs/
