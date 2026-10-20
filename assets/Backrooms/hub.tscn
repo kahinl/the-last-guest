@@ -21,33 +21,38 @@
 
 [sub_resource type="Environment" id="Env"]
 background_mode = 1
-background_color = Color(0.02, 0.019, 0.015, 1)
+background_color = Color(0.12, 0.11, 0.07, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.55, 0.5, 0.4, 1)
-ambient_light_energy = 0.6
+ambient_light_color = Color(0.82, 0.7, 0.4, 1)
+ambient_light_energy = 1.05
 tonemap_mode = 2
 fog_enabled = true
-fog_light_energy = 0.5
-fog_density = 0.015
+fog_light_energy = 0.4
+fog_density = 0.006
 fog_albedo_color = Color(0.85, 0.78, 0.5, 1)
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.15
+glow_strength = 0.7
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall"]
 albedo_texture = ExtResource("e0")
+albedo_color = Color(1, 0.92, 0.6, 1)
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(3,2,3)
+uv1_scale = Vector3(7.27, 5.27, 7.27)
 
 [sub_resource type="StandardMaterial3D" id="Mat_floor"]
 albedo_texture = ExtResource("e1")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(5,1,5)
+uv1_scale = Vector3(62.86, 1, 62.86)
 
 [sub_resource type="StandardMaterial3D" id="Mat_ceil"]
 albedo_texture = ExtResource("e2")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(6,1,6)
+uv1_scale = Vector3(18.33, 1, 18.33)
 
 [sub_resource type="StandardMaterial3D" id="Mat_panel"]
 albedo_texture = ExtResource("e3")
@@ -135,10 +140,11 @@ size = Vector3(16, 2.9, 0.3)
 size = Vector3(16, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z4"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(4.8, 2, 4.8)
+uv1_scale = Vector3(29.09, 5.27, 29.09)
 
 [sub_resource type="BoxMesh" id="Mesh_wz1"]
 size = Vector3(4, 2.9, 0.3)
@@ -147,10 +153,11 @@ size = Vector3(4, 2.9, 0.3)
 size = Vector3(4, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z1"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(1.2, 2, 1.2)
+uv1_scale = Vector3(7.27, 5.27, 7.27)
 
 [sub_resource type="BoxMesh" id="Mesh_wz3"]
 size = Vector3(12, 2.9, 0.3)
@@ -159,10 +166,11 @@ size = Vector3(12, 2.9, 0.3)
 size = Vector3(12, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z3"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(3.6, 2, 3.6)
+uv1_scale = Vector3(21.82, 5.27, 21.82)
 
 [sub_resource type="BoxMesh" id="Mesh_wz2"]
 size = Vector3(8, 2.9, 0.3)
@@ -171,10 +179,11 @@ size = Vector3(8, 2.9, 0.3)
 size = Vector3(8, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z2"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(2.4, 2, 2.4)
+uv1_scale = Vector3(14.55, 5.27, 14.55)
 
 [sub_resource type="BoxMesh" id="Mesh_wz7"]
 size = Vector3(28, 2.9, 0.3)
@@ -183,10 +192,11 @@ size = Vector3(28, 2.9, 0.3)
 size = Vector3(28, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z7"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(8.4, 2, 8.4)
+uv1_scale = Vector3(50.91, 5.27, 50.91)
 
 [sub_resource type="BoxMesh" id="Mesh_wz9"]
 size = Vector3(36, 2.9, 0.3)
@@ -195,10 +205,11 @@ size = Vector3(36, 2.9, 0.3)
 size = Vector3(36, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z9"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(10.8, 2, 10.8)
+uv1_scale = Vector3(65.45, 5.27, 65.45)
 
 [sub_resource type="BoxMesh" id="Mesh_wx4"]
 size = Vector3(0.3, 2.9, 16)
@@ -207,10 +218,11 @@ size = Vector3(0.3, 2.9, 16)
 size = Vector3(0.3, 2.9, 16)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x4"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(4.8, 2, 4.8)
+uv1_scale = Vector3(29.09, 5.27, 29.09)
 
 [sub_resource type="BoxMesh" id="Mesh_wx2"]
 size = Vector3(0.3, 2.9, 8)
@@ -219,10 +231,11 @@ size = Vector3(0.3, 2.9, 8)
 size = Vector3(0.3, 2.9, 8)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x2"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(2.4, 2, 2.4)
+uv1_scale = Vector3(14.55, 5.27, 14.55)
 
 [sub_resource type="BoxMesh" id="Mesh_wx1"]
 size = Vector3(0.3, 2.9, 4)
@@ -231,10 +244,11 @@ size = Vector3(0.3, 2.9, 4)
 size = Vector3(0.3, 2.9, 4)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x1"]
+albedo_color = Color(1, 0.92, 0.6, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
-uv1_scale = Vector3(1.2, 2, 1.2)
+uv1_scale = Vector3(7.27, 5.27, 7.27)
 
 [sub_resource type="StandardMaterial3D" id="MatP_Chair_A"]
 albedo_texture = ExtResource("e7")
@@ -602,9 +616,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, -16)
 mesh = SubResource("Mesh_panel")
 surface_material_override/0 = SubResource("Mat_panel")
 [node name="OmniLight3D" type="OmniLight3D" parent="lamp0"]
-light_color = Color(1, 0.98, 0.88, 1)
+light_color = Color(1, 0.97, 0.85, 1)
 light_energy = 1.1
-omni_range = 9.5
+omni_range = 13.0
 
 [node name="lamp1" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.85, 0)
@@ -612,9 +626,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.85, 0)
 mesh = SubResource("Mesh_panel")
 surface_material_override/0 = SubResource("Mat_panel")
 [node name="OmniLight3D" type="OmniLight3D" parent="lamp1"]
-light_color = Color(1, 0.98, 0.88, 1)
-light_energy = 1.4
-omni_range = 9.5
+light_color = Color(1, 0.97, 0.85, 1)
+light_energy = 0.45
+omni_range = 13.0
 
 [node name="lamp2" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.85, 0)
@@ -622,9 +636,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.85, 0)
 mesh = SubResource("Mesh_panel")
 surface_material_override/0 = SubResource("Mat_panel")
 [node name="OmniLight3D" type="OmniLight3D" parent="lamp2"]
-light_color = Color(1, 0.98, 0.88, 1)
-light_energy = 1.4
-omni_range = 9.5
+light_color = Color(1, 0.97, 0.85, 1)
+light_energy = 0.45
+omni_range = 13.0
 
 [node name="lamp3" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, 0)
@@ -632,9 +646,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, 0)
 mesh = SubResource("Mesh_panel")
 surface_material_override/0 = SubResource("Mat_panel")
 [node name="OmniLight3D" type="OmniLight3D" parent="lamp3"]
-light_color = Color(1, 0.98, 0.88, 1)
+light_color = Color(1, 0.97, 0.85, 1)
 light_energy = 1.3
-omni_range = 9.5
+omni_range = 13.0
 
 [node name="lamp4" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, 16)
@@ -642,9 +656,164 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, 16)
 mesh = SubResource("Mesh_panel")
 surface_material_override/0 = SubResource("Mat_panel")
 [node name="OmniLight3D" type="OmniLight3D" parent="lamp4"]
-light_color = Color(1, 0.98, 0.88, 1)
-light_energy = 1.4
-omni_range = 9.5
+light_color = Color(1, 0.97, 0.85, 1)
+light_energy = 0.45
+omni_range = 13.0
+
+[node name="panel_1_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, -16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_3_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.84, -16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_5_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.84, -16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_7_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.84, -16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_9_1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.84, -16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_4_2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.84, -12)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_6_2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.84, -12)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_1_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, -8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_3_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.84, -8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_5_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.84, -8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_7_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.84, -8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_9_3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.84, -8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_2_4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.84, -4)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_8_4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.84, -4)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_1_5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, 0)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_3_5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.84, 0)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_5_5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.84, 0)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_7_5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.84, 0)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_9_5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.84, 0)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_4_6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.84, 4)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_6_6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.84, 4)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_1_7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, 8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_3_7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.84, 8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_5_7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.84, 8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_7_7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.84, 8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_9_7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.84, 8)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_1_9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, 16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_3_9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.84, 16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_5_9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.84, 16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_7_9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.84, 16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+
+[node name="panel_9_9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.84, 16)
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
 
 [node name="ambLights" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)

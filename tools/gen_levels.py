@@ -86,7 +86,18 @@ def emit_level(name, spec):
         "fog_light_energy = %s" % pal["fog_e"],
         "fog_density = %s" % pal["fog_d"],
         "fog_albedo_color = Color(%s)" % pal["fog_c"],
+        "glow_enabled = true",
+        "glow_intensity = 0.6",
+        "glow_bloom = 0.15",
+        "glow_strength = 0.7",
     ]))
+
+    # fiziksel UV: her doku karesi sabit metrekare kaplar (germe/bulaniklik yok)
+    TEX_WALL_M = pal.get("tex_wall", 0.55)
+    TEX_FLOOR_M = pal.get("tex_floor", 0.7)
+    TEX_CEIL_M = pal.get("tex_ceil", 2.4)
+    def uvw(meters, tex_m):
+        return round(meters / tex_m, 2)
 
     def mat(mid, tex, scale, col="1, 1, 1, 1", emis=None):
         lines = ['[sub_resource type="StandardMaterial3D" id="%s"]' % mid,
@@ -101,9 +112,9 @@ def emit_level(name, spec):
                       "emission_energy_multiplier = %s" % emis[1]]
         return sub(mid, "\n".join(lines))
 
-    mat_wall = mat("Mat_wall", wall_tex, pal["wall_scale"])
-    mat_floor = mat("Mat_floor", floor_tex, pal["floor_scale"])
-    mat_ceil = mat("Mat_ceil", ceil_tex, pal["ceil_scale"])
+    mat_wall = mat("Mat_wall", wall_tex, "%g, %g, %g" % (uvw(S, TEX_WALL_M), uvw(H, TEX_WALL_M), uvw(S, TEX_WALL_M)), pal.get("wall_tint", "1, 1, 1, 1"))
+    mat_floor = mat("Mat_floor", floor_tex, "%g, 1, %g" % (uvw(W * S, TEX_FLOOR_M), uvw(Hh * S, TEX_FLOOR_M)))
+    mat_ceil = mat("Mat_ceil", ceil_tex, "%g, 1, %g" % (uvw(W * S, TEX_CEIL_M), uvw(Hh * S, TEX_CEIL_M)))
     mat_panel = sub("Mat_panel", "\n".join([
         '[sub_resource type="StandardMaterial3D" id="Mat_panel"]',
         'albedo_texture = ExtResource("%s")' % panel_tex,
@@ -189,9 +200,10 @@ def emit_level(name, spec):
                 wm = boxmesh("Mesh_wx%d" % L, T, H, length); ws = boxshape("Col_wx%d" % L, T, H, length)
             wmat = sub("Mat_wall_%s%d" % (key[0], L), "\n".join([
                 '[sub_resource type="StandardMaterial3D" id="Mat_wall_%s%d"]' % (key[0], L),
+                'albedo_color = Color(%s)' % pal.get("wall_tint", "1, 1, 1, 1"),
                 'albedo_texture = ExtResource("%s")' % wall_tex,
                 "texture_repeat = 1", "roughness = 0.95",
-                "uv1_scale = Vector3(%g, 2, %g)" % (L * 1.2, L * 1.2)]))
+                "uv1_scale = Vector3(%g, %g, %g)" % (uvw(L * S, TEX_WALL_M), uvw(H, TEX_WALL_M), uvw(L * S, TEX_WALL_M))]))
             wall_geo[key] = (wm, ws, wmat)
     wn = 0
     for (orient, fixed, mid_cell, L) in wall_runs:
@@ -249,6 +261,22 @@ def emit_level(name, spec):
             "light_color = Color(%s)" % pal["light_c"],
             "light_energy = %s" % lc.get("e", pal["light_e"]),
             "omni_range = %s" % lc.get("range", pal["light_range"])]))
+
+    # --- yogun tavan paneli izgarasi (klasik Backrooms esit isik) ---
+    # Her acik hucrede (atlamali) emissive panel; isik kaynagi degil, parlak yuzey.
+    # OmniLight3D'ler yalnizca spec.lights altinda; gerisi glow + ambient tasiyor.
+    for cz in range(Hh):
+        for cx in range(W):
+            if not is_open(grid, cx, cz):
+                continue
+            if (cx + cz) % 2 == 1:
+                continue
+            x, z = cell_world(cx, cz, W, Hh)
+            nodes.append("\n".join([
+                '[node name="panel_%d_%d" type="MeshInstance3D" parent="."]' % (cx, cz),
+                "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, %g, %g, %g)" % (x, H - 0.06, z),
+                'mesh = SubResource("%s")' % m_panel,
+                'surface_material_override/0 = SubResource("%s")' % mat_panel]))
 
     # --- ses vericileri ---
     for a in spec.get("audio", []):
@@ -527,28 +555,31 @@ P0 = dict(wall="res://assets/backrooms/textures/Wallpaper2.res",
           floor="res://assets/backrooms/textures/Floor_carpet_clean_BaseColor.res",
           ceil="res://assets/backrooms/textures/CeilingTiles.res",
           wall_scale="3,2,3", floor_scale="5,1,5", ceil_scale="6,1,6",
-          bg="0.02, 0.019, 0.015, 1", ambc="0.52, 0.47, 0.33, 1", ambe=0.55,
-          fog_e=0.5, fog_d=0.018, fog_c="0.85, 0.78, 0.5, 1",
-          light_c="1, 0.98, 0.88, 1", light_e=1.4, light_range=9.5,
+          bg="0.12, 0.11, 0.07, 1", ambc="0.85, 0.72, 0.36, 1", ambe=1.0,
+          fog_e=0.4, fog_d=0.006, fog_c="0.85, 0.78, 0.5, 1",
+          light_c="1, 0.97, 0.85, 1", light_e=0.45, light_range=13.0,
+          wall_tint="1, 0.9, 0.55, 1",
           door_c="0.55, 0.3, 0.16, 1")
 P1 = dict(wall="res://assets/backrooms/textures/esp_concrete_black.res",
           floor="res://assets/backrooms/textures/esp_concrete_floor.res",
           ceil="res://assets/backrooms/textures/CeilingTiles.res",
           wall_scale="2,1.5,2", floor_scale="4,1,4", ceil_scale="6,1,6",
-          bg="0.008, 0.009, 0.012, 1", ambc="0.35, 0.38, 0.45, 1", ambe=0.26,
-          fog_e=0.25, fog_d=0.03, fog_c="0.5, 0.55, 0.6, 1",
-          light_c="0.8, 0.83, 0.95, 1", light_e=1.1, light_range=8.0,
+          bg="0.03, 0.035, 0.05, 1", ambc="0.5, 0.55, 0.68, 1", ambe=0.6,
+          fog_e=0.3, fog_d=0.012, fog_c="0.5, 0.55, 0.6, 1",
+          light_c="0.85, 0.88, 1, 1", light_e=0.5, light_range=12.0,
+          wall_tint="0.7, 0.75, 0.9, 1",
           door_c="0.3, 0.32, 0.38, 1")
 P2 = dict(wall="res://assets/backrooms/textures/Metal_albedo.res",
           floor="res://assets/backrooms/textures/Metal_albedo.res",
           ceil="res://assets/backrooms/textures/Vents.res",
           wall_scale="2,2,2", floor_scale="3,1,3", ceil_scale="4,1,4",
-          bg="0.004, 0.008, 0.01, 1", ambc="0.2, 0.35, 0.4, 1", ambe=0.2,
-          fog_e=0.2, fog_d=0.04, fog_c="0.4, 0.6, 0.65, 1",
-          light_c="0.6, 0.92, 1, 1", light_e=0.95, light_range=7.0,
+          bg="0.02, 0.04, 0.05, 1", ambc="0.35, 0.6, 0.68, 1", ambe=0.55,
+          fog_e=0.25, fog_d=0.014, fog_c="0.4, 0.6, 0.65, 1",
+          light_c="0.6, 0.92, 1, 1", light_e=0.5, light_range=12.0,
+          wall_tint="0.6, 0.85, 0.95, 1",
           door_c="0.45, 0.25, 0.12, 1")
-PH = dict(P0); PH["ambc"] = "0.55, 0.5, 0.4, 1"; PH["ambe"] = 0.6
-PH["fog_d"] = 0.015; PH["door_c"] = "0.2, 0.6, 0.3, 1"
+PH = dict(P0); PH["ambc"] = "0.82, 0.7, 0.4, 1"; PH["ambe"] = 1.05
+PH["fog_d"] = 0.006; PH["door_c"] = "0.2, 0.6, 0.3, 1"; PH["wall_tint"] = "1, 0.92, 0.6, 1"
 
 A = "res://assets/backrooms/audio/"
 MP = "res://assets/backrooms/meshes/"
