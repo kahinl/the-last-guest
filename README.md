@@ -177,6 +177,40 @@ zemininin dışında, boşlukta duruyordu: oyuncu onlara **ulaşamıyordu**, yan
   `from_room1`/`from_library` → z=-0.55, `from_bath` → x=-4.20, `from_room2` → z=2.40,
   `from_attic` → (-18.6, 2.5), `from_room3` → (-8.05, -0.55).
 
+### Hikâye katmanı: arc artık kapanışa bağlanıyor (2026-10-20 geç oturum)
+
+Araştırma (Backrooms fan topluluğunun "aşırı kullanılmış" dedikleri + Darkwood/
+Edith Finch yapıları) iki somut kusuru doğruladı:
+
+1. **Ölü epilog metni.** `epi_1 / epi_a / epi_b / epi_3 / garden_1 / garden_2`
+   `lang.csv`'de yazılıydı ama kodda ve sahnelerde **hiçbir referans yoktu**
+   (grep: 0 eşleşme) — oyunun çözüm cümleleri hiç oynanmıyordu. Artık üç sonun
+   kuyruğunda, menü açılmadan önce siyah perdede geçiyorlar (`main_menu.gd`
+   `EPILOGUE` tablosu + `Epilogue` CanvasLayer, layer 5). `GameState.last_ending`
+   bunun için eklendi: `*_done` bayrakları aynı oturumda birden çok sonda true
+   kalabildiğinden "az önce hangisi" ayrı tutuluyor ve oynatılınca temizleniyor.
+2. **Varlık kovalıyordu, kural yalandı.** `level2_help` duvara kazınmış
+   *"IT FOLLOWS THE SOUND YOU MAKE. BE STILL."* cümlesi mekanikte karşılıksızdı:
+   `entity.tscn` yakınlık tetiğiyle kilitlenip koşuyordu ve **2.6 m/s > oyuncu
+   2.2 m/s** olduğu için tetiklendikten sonra kaçış yoktu — yani kazancı olmayan
+   bir jumpscare döngüsü. `backrooms_entity.gd` ses-güdümlü: `player.noise`
+   (yatay hızdan türetiliyor) birikince uyanıyor, **yalnızca ses varken**
+   hareket ediyor, sustuğun anda olduğu yerde kalıyor ve 3 sn sonra çekiliyor.
+   Kural artık doğru: koşmak içgüdüsü ölüm, durmak içgüdüsü hayat.
+   Doğrulama: `tools/test_entity.tscn` (4 düğüm, `_process` elle adimlanarak
+   fps'ten bagimsiz).
+3. **Darkwood kuralı:** arc'ı bitiren (`backrooms_survived`) oyuncuya dördüncü bir
+   son açılmıyor; kapanışa tek satır ekleniyor — `epi_ledger*: *"…I wrote
+   tomorrow's entry myself, and my hand did not shake."* El yazısının bozulması
+   oyunun ana motifi, dolayısıyla arc'ı kapanışa bağlayan şey de o.
+
+> **Bulgu ama DEĞİŞTİRİLMEDİ:** `WALK_SPEED == SPRINT_SPEED == 2.2`
+> (`1cbf0cd`'den beri). Shift koşusu `README.md`'de kontrol olarak yazılı, oyunda
+> hiçbir şey yapmıyor. Hızları değiştirmek seviye mesafelerini/BFS'yi ve telefon
+> dokunuş hissini etkilediği için tek başına dokunulmadı — istenirse ayrı karar.
+> (Varlık tasarımı bu eşitliğe *bağlı değil*: yakalanamama durumu zaten hız
+> farkından değil, kilitlenip durmadan koşmasından geliyordu.)
+
 ---
 
 ## Kalan işler — 2026-10-20 devir notu

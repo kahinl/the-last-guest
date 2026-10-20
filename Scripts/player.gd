@@ -3,6 +3,11 @@ class_name Player
 
 # ================= Movement =================
 var speed
+##  Bu karede ne kadar gurtu cikardigim (0..1). backrooms_entity.gd kovalamiyor;
+##  yalnizca sese geliyor, yani durmak tek kurtulus. Sprint hizi yuruyisle ayni
+##  (SPRINT_SPEED == WALK_SPEED == 2.2, 1cbf0cd'den beri) oldugu icin girdi
+##  degil gercek hiz okunuyor.
+var noise: float = 0.0
 const WALK_SPEED = 2.2
 const SPRINT_SPEED = 2.2
 const JUMP_VELOCITY = 2.5
@@ -205,6 +210,10 @@ func _physics_process(delta):
 
 			velocity.x = lerp(velocity.x, 0.0, delta * 7.0)
 			velocity.z = lerp(velocity.z, 0.0, delta * 7.0)
+
+	# Ses duzeyi: yatay hiz / yuruyus hizi. Durunca kendilinden soner.
+	var _target_noise := clampf(Vector2(velocity.x, velocity.z).length() / maxf(WALK_SPEED, 0.1), 0.0, 1.0)
+	noise = lerpf(noise, _target_noise, minf(1.0, delta * 6.0))
 
 	# Headbob
 	t_bob += delta * velocity.length() * float(is_on_floor())

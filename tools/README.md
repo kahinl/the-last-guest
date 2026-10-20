@@ -15,6 +15,7 @@ ilgili script, grid değişince üreteç** çalışmalı.
 | `dump_tex.gd` | `assets/backrooms/**/*.res` içini PNG olarak döker (doku teşhisi) | `godot --headless --path . --script res://tools/dump_tex.gd` |
 | `test_flagpush.tscn` | `requires_flag` itmesini doğrular: bayrak yazılınca nesne görünür olmalı | `godot --headless --path . tools/test_flagpush.tscn` |
 | `test_monster.tscn` / `test_reset2.tscn` | canavar aktivasyonu + ölüm akışı / ölüm sonrası sahne sıfırlama | `godot --headless --path . tools/test_monster.tscn` |
+| `test_entity.tscn` | varlığın **ses-güdümlü** davranışını doğrular: sessizken uyanmıyor, gürültüyle yaklaşıyor, susunca duruyor ve çekiliyor. `_process` elle adimlandigi icin cihaz fps'inden bagimsiz | `godot --headless --path . tools/test_entity.tscn` |
 
 ---
 
