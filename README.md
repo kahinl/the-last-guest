@@ -146,6 +146,16 @@ onların durumunu günceller.
 - `tools/shot.gd` iki seçenek kazandı: `bright` (ortam ışığını yükseltir; otel
   seviyeleri el feneri olmadan zifiri karanlık render oluyordu) ve
   `cam=x:z[:y[:ry]]` (kamera istenen noktaya konur). Yerleşim teşhisi ikisiz yapılamadı.
+- **Bölüm B'nin tamamı kapandı**: B5 ayar oldu, B6-B9 kodlandı, **B10 bilinçli olarak
+  değiştirilmedi** (gerekçesi maddede yazılı).
+- Karar gerektiren diğer maddeler: **C13** — `/root/After-the-threshold` olduğu gibi
+  bırakıldı (tek `.godot` önbelleği orada, yeniden üretmek pahalı). **C14** — Termux
+  `~/.bashrc`'deki düz metin Google API anahtarı **doğrulandı**
+  (`/data/data/com.termux/files/home/.bashrc`; `/root/.bashrc` değil) ama tercihen
+  dokunulmadı. Not: bir kez düz metin görülmüş anahtarın asıl çözümü **dondurup
+  yenisini üretmek**, dosyayı düzenlemek değil. **C12** — madde bayat: depoda artık
+  `beyhan` remote'u **yok**, tek remote `origin` = `https://github.com/kahinl/the-last-guest.git`
+  ve `main` 16 commit önde. Push, hedef netleşince.
 
 ### Hol kapılarının gerçek hikâyesi (A1'in kök nedeni tahminden farklıydı)
 
@@ -221,9 +231,11 @@ o günki hâle göre.
    `assets/player/player.gdshader` `hint_screen_texture` kullanıyor: her karede tam
    framebuffer kopyası + piksel başına 3 ekran örneği (1908×958). Player sahnesi 19
    seviyede instance'lı, `main_menu.tscn:886`'da da aynı overlay var.
-   **Kaldırılmadı: aperture-grille/scanline bilinçli bir sanat kararı.** Yapılacak
-   seçenekler: ayarlarda kapatılabilir yapmak, ya da yalnızca TV/rüya/kaset
-   sahnelerinde açmak.
+   **KAPANDI** — `GameState.crt_enabled` (varsayilan **TRUE**, yani goruntu
+   degismedi) + `Scripts/crt_overlay.gd`; ana menude `MENU_CRT` isaretleme kutusu.
+   Ayni script `player.tscn` ve `main_menu.tscn`'deki overlay'lere asildi.
+   `visible=false` iken Control hic cizilmiyor — ekran dokusu orneklenmedigi icin
+   asil maliyet o karede tamamen kalkiyor.
 6. **`Scripts/inspect_item.gd:32-37`** — `req` bayrağı için `_process`'te her karede
    `GameState.get(...)` yoklaması. Yalnızca 3 nesne `req` kullanıyor
    (`hallWay.tscn:1291`, `room2.tscn:5721`, `level2.tscn:1359`) ve sonsuza dek yoklar.
@@ -268,6 +280,17 @@ o günki hâle göre.
     ikiye katlar; telefonda yalnızca ETC2/ASTC gerekir); `:136` Jolt fiziği sadece
     kapsül-durağın geometri için kullanılıyor (specülatif, ana iş parçacığı maliyeti);
     `:19` boş ses yolu düzeni (her ses Master'da).
+    **KARAR: hicbiri degistirilmedi** (2026-10-20 akşamı, gerekçeleriyle):
+    · S3TC/BPTC kapatmak ithalat isini yariya indirir AMA (a) Windows/itch export'u
+    hâlâ planlanmis bir madde (G32) ve masaustu S3TC ister, (b) bu cihazda editor
+    `--import`'ta coktugu icin ithalat zaten kosulamiyor — yani olculebilir kazanc
+    yok, geri donuslu zarar riski var. · Jolt'tan geri almak carpisma davranisini
+    degistirir (otel taranmis geometri + kapisma spawn'lari yeni dogruladi),
+    speculatif bir kazanic icin risk alinmadi. · `mode=4` Android'de yok sayiliyor,
+    masaustunde ise gercek bir davranis degisikligi; tek basina dokunulmadi.
+    · `default_bus_layout=""` bir kusur degil: Godot'nun yerlesik tek Master yolu
+    demek. Gercekten cok yollu duzen istenirse ekilecek bir dosya, silinecek bir
+    satir degil.
 
 ### C. İş/araç tarafında kalanlar
 
