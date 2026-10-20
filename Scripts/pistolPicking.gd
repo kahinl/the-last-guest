@@ -10,7 +10,7 @@ func interact():
 		
 	hide_prompt()
 	
-	GameState.pistol_picked = true
+	GameState.set_flag("pistol_picked", true)
 	visible = false
 	collision_layer = 0 
 	hands.visible = true

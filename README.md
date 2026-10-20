@@ -229,14 +229,29 @@ o günki hâle göre.
    (`hallWay.tscn:1291`, `room2.tscn:5721`, `level2.tscn:1359`) ve sonsuza dek yoklar.
    Doğrusu: bayrak setter'ından görünürlüğü itmek. Ayrıca iş yapmayan `_process`
    stub'ları: `kitchen.gd:21`, `dreamfadeout.gd:40`, `main_menu.gd:15`.
+   **KAPANDI** — `GameState.flag_set(name,value)` sinyali + `set_flag()` eklendi;
+   `inspect_item` artık `_process` **hiç** çalıştırmıyor, kosul yazildigi anda geliyor.
+   Bayrak yazan 5 cagri noktasi (`tv.gd`, `scene_intro.gd`, `inspect_item.gd` x3) ve
+   `pistolPicking.gd`'deki duz atama `set_flag`'e cevrildi. Uc stub silindi.
+   Dogrulama: `tools/test_flagpush.tscn` (3/3).
+   > **Tuzak:** test araci `get_tree().root.add_child()`i kendi `_ready`'sinde
+   > cagirmamali — "Parent node is busy setting up children" **sessizce** basarisiz
+   > oluyor ve ilk sahne hic agaca girmeden "dogru" sonuc veriyordu. Once
+   > `await get_tree().process_frame`.
 7. **`Scripts/monster.gd:24-26`** — `activated` değilken bile `_physics_process` her
    Basement karesinde koşuyor. `_ready()`'de `set_physics_process(false)` +
    `activate_monster()`'da açmak yeterli.
+   **KAPANDI** — sinyal ile aninda, + saniyede 1 yoklayan bir `Timer` guvenlik agi
+   (`GameState.pistol_picked = true` diye dogrudan yazan cagri yerleri var; test
+   araci gibi). `tools/test_monster.tscn` hâlâ yesil.
 8. **`Scripts/flashlight.gd:14-18` ve `cassette.gd:19-22`** — `queue_free()`'den
    **sonra** `await speech.animation_finished` var; nesne serbest kaldığı için
    kuyruğun devamındaki `speech.stop()` hiç çalışmıyor. Bilerek dokunulmadı:
    `queue_free()`'i sona almak, nesnenin ses uzunluğu kadar dünyada görünür kalmasına
    yol açar. Doğru çözüm: `visible=false` + çarpışmayı hemen kapat, free'i sonda yap.
+   **KAPANDI** — onerildigi gibi: `visible=false` + `collision_layer=0` + `hide_prompt()`
+   hemen, `queue_free()` ses bitince. Carpisma kapandigi icin ikinci bir `interact()`
+   isikiniyla zaten ulasilamaz.
 9. **`Scripts/backrooms_amb.gd:60-69` ve `level0_amb.gd` `_schedule()`** — her amb
    düğümünde 3 adet `while true: await create_timer(...)`. Sahne kapatıldıktan sonra
    90 sn'ye kadar askıda coroutine/timer tutuyor (`is_inside_tree()` kontrolü var, o

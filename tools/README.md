@@ -13,6 +13,8 @@ ilgili script, grid değişince üreteç** çalışmalı.
 | `probe.tscn` + `probe.gd` | `SpawnPoints` markerlarını fiziksel olarak denetler (zemin var mı, duruş kapsülü geometri içinde mi, marker gömük mü) | `godot --headless --path . tools/probe.tscn -- spawns res://assets/Backrooms/level0.tscn ...` |
 | `scene_nodes.py` | `.tscn` içindeki düğümlerin **dünya** koordinatını + çarpışma tipini/boyutunu basar (probe'un "hangi gövde engelliyor" dediği şeyin nereye denk geldiği) | `python3 tools/scene_nodes.py assets/House/Floor1/floor1hallWay.tscn '^(f2Door\|roomDoor2)$'` |
 | `dump_tex.gd` | `assets/backrooms/**/*.res` içini PNG olarak döker (doku teşhisi) | `godot --headless --path . --script res://tools/dump_tex.gd` |
+| `test_flagpush.tscn` | `requires_flag` itmesini doğrular: bayrak yazılınca nesne görünür olmalı | `godot --headless --path . tools/test_flagpush.tscn` |
+| `test_monster.tscn` / `test_reset2.tscn` | canavar aktivasyonu + ölüm akışı / ölüm sonrası sahne sıfırlama | `godot --headless --path . tools/test_monster.tscn` |
 
 ---
 

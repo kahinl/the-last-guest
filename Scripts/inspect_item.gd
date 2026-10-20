@@ -26,14 +26,15 @@ func _ready() -> void:
 	if destroy_on_pick and flag_name != "" and bool(GameState.get(flag_name)):
 		queue_free()
 		return
+	if requires_flag != "":
+		# kosul sahne icinde sonradan saglanabilir (tape1 oynatilinca tape02'nin
+		# gorunmesi gibi); flag_set bunu yazildigi anda bildiriyor, yoklama yok.
+		GameState.flag_set.connect(_on_game_state_flag_set)
 	_apply_visibility()
 
 
-func _process(_delta: float) -> void:
-	# requires_flag kosulu sahne icinde sonradan saglanabilir (tape1 oynatilinca
-	# tape02'nin gorunmesi gibi), o yuzden kosul saglanana kadar kontrol edilir.
-	if _requirements_ok():
-		set_process(false)
+func _on_game_state_flag_set(name: String, _value: Variant) -> void:
+	if name == requires_flag:
 		_apply_visibility()
 
 
@@ -66,7 +67,7 @@ func interact() -> void:
 	# Konusma boyunca kilit; iki asamali incelemelerde ikinci tur icin tekrar acilir
 	_used = true
 	if flag != "":
-		GameState.set(flag, true)
+		GameState.set_flag(flag, true)
 	if add_sanity != 0:
 		GameState.sanity = clampi(int(GameState.sanity) + add_sanity, 0, 100)
 
@@ -79,11 +80,11 @@ func interact() -> void:
 
 	if counter_name != "":
 		var total: int = int(GameState.get(counter_name)) + 1
-		GameState.set(counter_name, total)
+		GameState.set_flag(counter_name, total)
 		if counter_target > 0 and total >= counter_target and reward_key != "":
 			if reward_flag == "" or not bool(GameState.get(reward_flag)):
 				if reward_flag != "":
-					GameState.set(reward_flag, true)
+					GameState.set_flag(reward_flag, true)
 				var rl := _label()
 				if rl:
 					await get_tree().create_timer(0.9).timeout

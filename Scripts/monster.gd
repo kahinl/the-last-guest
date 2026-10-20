@@ -13,6 +13,8 @@ var shooted = 0
 var activated = false
 var can_move = false
 var is_processing_shot = false # Prevents input spam during the await
+var _safety: Timer = null
+
 
 func _ready() -> void:
 	visible = false
@@ -20,11 +22,34 @@ func _ready() -> void:
 	can_move = false
 	$CollisionShape3D.disabled = true
 	$Area3D/CollisionShape3D.disabled = true
+	# Aktive edilmeden fizik karesi kosmasin; eskiden her Basement karesinde
+	# GameState.pistol_picked yoklaniyordu (saniyede ~60).
+	if GameState.pistol_picked:
+		activate_monster()
+		return
+	set_physics_process(false)
+	GameState.flag_set.connect(_on_game_state_flag_set)
+	# Guvenlik agi: flag_set'i atlayip `GameState.pistol_picked = true` diyen
+	# cagri yerleri var (tools/test_monster.gd gibi). Sinyal aninda tetikler,
+	# bu sadece saniyede 1 yoklama ile yedek.
+	_safety = Timer.new()
+	_safety.wait_time = 1.0
+	_safety.timeout.connect(_check_pistol)
+	add_child(_safety)
+	_safety.start()
 
-func _physics_process(delta: float) -> void:
-	if GameState.pistol_picked and not activated:
+
+func _check_pistol() -> void:
+	if GameState.pistol_picked:
 		activate_monster()
 
+
+func _on_game_state_flag_set(name: String, value: Variant) -> void:
+	if name == "pistol_picked" and bool(value):
+		activate_monster()
+
+
+func _physics_process(delta: float) -> void:
 	if activated and can_move and path_follow:
 		path_follow.progress += speed * delta
 		
@@ -38,8 +63,15 @@ func _physics_process(delta: float) -> void:
 		path_follow.rotation.y = lerp_angle(path_follow.rotation.y, target_rot, rotation_speed * delta)
 
 func activate_monster():
+	if activated:
+		return  # sinyal + guvenlik zamanlayicisi + ilk kontrol ayni anda gelebilir
 	activated = true
 	visible = true
+	set_physics_process(true)
+	if _safety:
+		_safety.stop()
+	if GameState.flag_set.is_connected(_on_game_state_flag_set):
+		GameState.flag_set.disconnect(_on_game_state_flag_set)
 	if anim:
 		anim.play("Getting Up")
 		await get_tree().create_timer(2.0).timeout

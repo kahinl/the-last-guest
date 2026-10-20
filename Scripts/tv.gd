@@ -123,7 +123,7 @@ func _play_tape() -> void:
 	if tape == "":
 		return
 
-	GameState.set(tape + "_played", true)
+	GameState.set_flag(tape + "_played", true)
 	GameState.interaction_locked = true
 	$CollisionShape3D.disabled = true
 

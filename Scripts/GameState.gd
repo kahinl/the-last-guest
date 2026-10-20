@@ -1,5 +1,16 @@
 extends Node
 
+##  Bayrak yazildiginda dinleyicilere bildirilir. inspect_item.gd gibi
+##  "su bayrak saglaninca gorunur ol" diyen nesneler bundan once her karede
+##  GameState.get() ile yokluyordu; artik kosul yazildigi anda itiliyor.
+signal flag_set(name: String, value: Variant)
+
+
+func set_flag(name: String, value: Variant) -> void:
+	set(name, value)
+	flag_set.emit(name, value)
+
+
 var interaction_locked = false
 var speech1_played = false
 var flashpicked = false

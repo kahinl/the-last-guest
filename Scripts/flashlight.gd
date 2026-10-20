@@ -10,12 +10,18 @@ func _ready():
 
 func interact():
 	GameState.flashpicked = true
-	
-	queue_free()
-	
+
+	# Nesne hemen serbest birakilirsa asagidaki await'in sonrasi hic kosmaz
+	# (kuyruk serbest edilen nesneye baglidir) ve speech.stop() dusmez.
+	# Gorunurluk + carpisma simdi kapaniyor; queue_free ses bitince.
+	visible = false
+	collision_layer = 0
+	hide_prompt()
+
 	speech.play("s2")
 	await speech.animation_finished
 	speech.stop()
+	queue_free()
 
 
 func show_prompt():

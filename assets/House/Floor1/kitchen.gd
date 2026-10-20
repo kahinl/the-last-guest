@@ -16,7 +16,3 @@ func _ready() -> void:
 		await get_tree().create_timer(3).timeout
 		GameState.symptom1_done = true
 		Speech.say(get_node_or_null("extraSpeech/line") as Label, "symptom_1")
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

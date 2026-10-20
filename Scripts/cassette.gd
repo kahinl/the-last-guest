@@ -15,11 +15,16 @@ func _ready():
 
 func interact():
 	GameState.Cassette_picked = true
-	hide_prompt() 
-	queue_free()
+	hide_prompt()
+	# flashlight.gd ile ayni sebep: nesne await'den once serbest birakilirsa
+	# speech.stop() hic kosmuyor. Gorunurluk/carpisma hemen, free sonda.
+	visible = false
+	collision_layer = 0
+
 	speech.play("s1")
 	await speech.animation_finished
 	speech.stop()
+	queue_free()
 
 
 func show_prompt():

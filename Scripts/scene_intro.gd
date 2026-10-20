@@ -23,7 +23,7 @@ func _ready() -> void:
 	if played_flag != "":
 		if bool(GameState.get(played_flag)):
 			return
-		GameState.set(played_flag, true)
+		GameState.set_flag(played_flag, true)
 
 	var label := get_node_or_null(label_path) as Label
 	if label == null:
