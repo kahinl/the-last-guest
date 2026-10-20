@@ -881,7 +881,7 @@ texture = ExtResource("e13")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -18)
 script = ExtResource("e14")
 target_scene = "res://assets/House/Floor1/Basement.tscn"
-spawn_name = "default"
+spawn_name = "from_backrooms"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="toHotel"]
 shape = SubResource("Col_door")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="toHotel"]

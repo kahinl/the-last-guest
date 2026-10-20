@@ -9,6 +9,10 @@ const JUMP_VELOCITY = 2.5
 const SENSITIVITY = 0.004
 var gravity = 9.8
 
+# Govde merkezi ile zemin araligi: CollisionShape3D ofseti 0.297, disbuoy
+# yarim capi 0.977 -> ayak tabani origin'in 0.68 m asagisinda.
+const SPAWN_FOOT_Y = 0.68
+
 # ================= Headbob =================
 const BOB_FREQ = 2.4
 const BOB_AMP = 0.025  # Subtle headbob
@@ -98,12 +102,29 @@ func _ready():
 			if spawns.has_node(spawn_name):
 				var spawn_point = spawns.get_node(spawn_name)
 				global_transform = spawn_point.global_transform
+				_snap_to_floor()
+			else:
+				push_warning("SpawnPoints/%s yok (%s); sahnedeki Player konumuna dusuldu" % [spawn_name, _sc.name])
 
 	# تأكيد أخير لوضع الماوس
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if GameState.flashlight_on:
 		$Head/Camera3D/flash.visible = true
+
+## Spawn markerlari zemine gore ~0.4 m asagida duruyor; govde merkezi dogru
+## yukseklige cekilmezse oyuncu her geciste zemine gomulup fizik tarafindan
+## disari firlatiliyor (titreme + yan yon kaymasi).
+## Beklemeden isin atilir: bir fizik karesi beklesem gravite oyuncuyu zaten
+## zeminden disari dogru iter.
+func _snap_to_floor() -> void:
+	var space := get_world_3d().direct_space_state
+	var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(
+		global_position + Vector3.UP * 0.9,
+		global_position - Vector3.UP * 2.0,
+		0xFFFFFFFF, [get_rid()]))
+	if not hit.is_empty():
+		global_position.y = hit.position.y + SPAWN_FOOT_Y
 
 # ==========================================================
 # MOUSE LOOK

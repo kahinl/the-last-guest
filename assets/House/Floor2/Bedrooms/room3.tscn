@@ -747,5 +747,10 @@ visible = false
 position = Vector2(947, 494)
 scale = Vector2(0.06, 0.06)
 texture = ExtResource("902_new2")
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="default" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(-0.03032915, 0, -0.99954, 0, 1, 0, 0.99954, 0, -0.03032915, -2.2184227, 0.84061503, -1.7749894)
+
 [connection signal="body_entered" from="Sketchfab_Scene/froom3Door" to="Sketchfab_Scene/froom3Door" method="_on_body_entered"]
 [connection signal="body_exited" from="Sketchfab_Scene/froom3Door" to="Sketchfab_Scene/froom3Door" method="_on_body_exited"]

@@ -656,7 +656,7 @@ LEVEL0 = dict(
         dict(name="nest", cx=9, cz=3, kind="box", flag="level0_nest_seen",
              key="level0_nest")],
     doors=[
-        dict(name="toHotel", cx=1, cz=1, dir="W", target=BASE, spawn="default",
+        dict(name="toHotel", cx=1, cz=1, dir="W", target=BASE, spawn="from_backrooms",
              need_key=""),
         dict(name="toAttic", cx=1, cz=1, dir="N", target=ATTIC, spawn="from_level0",
              need_key=""),
@@ -815,7 +815,7 @@ HUB = dict(
     items=[dict(name="hubnote", cx=5, cz=3, kind="note", flag="hub_note_seen",
                 key="hub_note")],
     doors=[
-        dict(name="toHotel", cx=5, cz=1, dir="N", target=BASE, spawn="default",
+        dict(name="toHotel", cx=5, cz=1, dir="N", target=BASE, spawn="from_backrooms",
              need_key=""),
         dict(name="toL2", cx=1, cz=5, dir="W", target=L2, spawn="from_hub",
              need_key=""),
