@@ -558,7 +558,7 @@ P0 = dict(wall="res://assets/backrooms/textures/Wallpaper2.res",
           bg="0.12, 0.11, 0.07, 1", ambc="0.85, 0.72, 0.36, 1", ambe=1.0,
           fog_e=0.4, fog_d=0.006, fog_c="0.85, 0.78, 0.5, 1",
           light_c="1, 0.97, 0.85, 1", light_e=0.45, light_range=13.0,
-          wall_tint="1, 0.9, 0.55, 1",
+          wall_tint="1, 0.98, 0.88, 1",
           door_c="0.55, 0.3, 0.16, 1")
 P1 = dict(wall="res://assets/backrooms/textures/esp_concrete_black.res",
           floor="res://assets/backrooms/textures/esp_concrete_floor.res",
@@ -567,19 +567,19 @@ P1 = dict(wall="res://assets/backrooms/textures/esp_concrete_black.res",
           bg="0.03, 0.035, 0.05, 1", ambc="0.5, 0.55, 0.68, 1", ambe=0.6,
           fog_e=0.3, fog_d=0.012, fog_c="0.5, 0.55, 0.6, 1",
           light_c="0.85, 0.88, 1, 1", light_e=0.5, light_range=12.0,
-          wall_tint="0.7, 0.75, 0.9, 1",
+          wall_tint="1.05, 1.08, 1.15, 1",
           door_c="0.3, 0.32, 0.38, 1")
 P2 = dict(wall="res://assets/backrooms/textures/Metal_albedo.res",
           floor="res://assets/backrooms/textures/Metal_albedo.res",
           ceil="res://assets/backrooms/textures/Vents.res",
           wall_scale="2,2,2", floor_scale="3,1,3", ceil_scale="4,1,4",
-          bg="0.02, 0.04, 0.05, 1", ambc="0.35, 0.6, 0.68, 1", ambe=0.55,
-          fog_e=0.25, fog_d=0.014, fog_c="0.4, 0.6, 0.65, 1",
-          light_c="0.6, 0.92, 1, 1", light_e=0.5, light_range=12.0,
-          wall_tint="0.6, 0.85, 0.95, 1",
+          bg="0.02, 0.03, 0.02, 1", ambc="0.42, 0.55, 0.42, 1", ambe=0.42,
+          fog_e=0.25, fog_d=0.014, fog_c="0.3, 0.4, 0.32, 1",
+          light_c="0.75, 0.95, 0.7, 1", light_e=0.5, light_range=12.0,
+          wall_tint="0.95, 1.0, 1.02, 1",
           door_c="0.45, 0.25, 0.12, 1")
 PH = dict(P0); PH["ambc"] = "0.82, 0.7, 0.4, 1"; PH["ambe"] = 1.05
-PH["fog_d"] = 0.006; PH["door_c"] = "0.2, 0.6, 0.3, 1"; PH["wall_tint"] = "1, 0.92, 0.6, 1"
+PH["fog_d"] = 0.006; PH["door_c"] = "0.2, 0.6, 0.3, 1"; PH["wall_tint"] = "1, 0.98, 0.85, 1"
 
 A = "res://assets/backrooms/audio/"
 MP = "res://assets/backrooms/meshes/"
@@ -641,7 +641,7 @@ LEVEL0 = dict(
         "###############"]),
     pal=P0, spawn=dict(cx=1, cz=1),
     spawns=[dict(name="default", cx=1, cz=1), dict(name="from_attic", cx=1, cz=1),
-            dict(name="from_level1", cx=13, cz=13)],
+            dict(name="from_level1", cx=12, cz=13)],
     lights=[dict(cx=1, cz=1), dict(cx=7, cz=1), dict(cx=13, cz=1),
             dict(cx=3, cz=5, flicker=True), dict(cx=9, cz=5), dict(cx=13, cz=5),
             dict(cx=1, cz=9), dict(cx=7, cz=9), dict(cx=13, cz=9),

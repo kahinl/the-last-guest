@@ -199,6 +199,13 @@ o günki hâle göre.
    (`esp_concrete_black` × mavi-gri tint). `P0/P1/P2/PH` için `shot.tscn` karesine
    bakarak kalibre et. **level2 ve hub kareleri hiç değerlendirilemedi** (seans orada
    kesildi).
+   **KAPANDI** — ölçerek: `Wallpaper2` zaten sarı (R178 G177 **B96**), `esp_concrete_black`
+   aslında orta gri (R118 G110 B102), `Metal_albedo` neredeyse nötr (R195 G199 B200).
+   Tint'ler buna göre: P0 `1,0.98,0.88` · P1 `1.05,1.08,1.15` · P2 `0.95,1,1.02` ·
+   PH `1,0.98,0.85`. **level2'nin camgöbeği tint'ten değil `ambc`/`fog_c`'den geliyordu**:
+   orası da yeşilimsi + daha karanlık yapıldı (`ambc 0.42,0.55,0.42`, `ambe 0.42`,
+   `fog_c 0.3,0.4,0.32`, `light_c 0.75,0.95,0.7`) — palet notunun "en karanlık,
+   yeşilimsi" tanımıyla artık uyumlu (parlaklık 72→65, Level 1 67).
 4. **`level0.tscn` → `from_level1` spawn'ı `l0key` kaidesinin üstünde**
    (x=24, z=24; zemin y=0.75, marker 1.13 m altında). Snap oyuncuyu 1.43 m'ye, yani
    piramidin üstüne koyuyor. Marker komşu boş hücreye taşınmalı.

@@ -9,8 +9,9 @@ ilgili script, grid değişince üreteç** çalışmalı.
 | `gen_levels.py` | grid → `level0/1/2/hub.tscn` + BFS erişilebilirlik kontrolü | `python3 tools/gen_levels.py` |
 | `build_translations.gd` | `lang.csv` → `lang.{en,ar,tr}.translation` | `godot --headless --path . --script res://tools/build_translations.gd` |
 | `audit_chain.py` | kapı→hedef→spawn→bayrak→konuşma zinciri + eksik dosya denetimi | `python3 tools/audit_chain.py` |
-| `shot.tscn` + `shot.gd` | sanal ekranda (Xvfb) sahne render edip PNG ekran görüntüsü alır | `xvfb-run -a godot --path . --rendering-method gl_compatibility tools/shot.tscn -- "res://SEHNE.tscn" "/tmp/cikti"` |
+| `shot.tscn` + `shot.gd` | sanal ekranda (Xvfb) sahne render edip PNG ekran görüntüsü alır. `bright` ortam ışığını yükseltir (otel seviyeleri el feneri olmadan zifiri karanlık çıkıyor; yerleşim teşhisi için), `cam=x:z[:y[:ry]]` kamerayı istenen noktaya koyar | `xvfb-run -a godot --path . --rendering-method gl_compatibility tools/shot.tscn -- "res://SEHNE.tscn" "/tmp/cikti" bright "cam=-6.5:0:0.68:0"` |
 | `probe.tscn` + `probe.gd` | `SpawnPoints` markerlarını fiziksel olarak denetler (zemin var mı, duruş kapsülü geometri içinde mi, marker gömük mü) | `godot --headless --path . tools/probe.tscn -- spawns res://assets/Backrooms/level0.tscn ...` |
+| `scene_nodes.py` | `.tscn` içindeki düğümlerin **dünya** koordinatını + çarpışma tipini/boyutunu basar (probe'un "hangi gövde engelliyor" dediği şeyin nereye denk geldiği) | `python3 tools/scene_nodes.py assets/House/Floor1/floor1hallWay.tscn '^(f2Door\|roomDoor2)$'` |
 | `dump_tex.gd` | `assets/backrooms/**/*.res` içini PNG olarak döker (doku teşhisi) | `godot --headless --path . --script res://tools/dump_tex.gd` |
 
 ---
@@ -105,6 +106,10 @@ Bir sahneye fade ile girilirken `player.gd` şu sırayı izler:
   ```
   `<< DURULMAZ` satırları: zemin yok, duruş kapsülü geometri içinde, ya da marker
   zeminin altında. Yeni kapı/spawn ekledikten sonra bu araçtan temiz geçmeli.
+  **Merdiven istisnası:** `stairs*` ile çakışmalar `DURULMAZ` sayılmaz, `basamak=N`
+  olarak ayrı basılır. Merdivende duran her kapsul bir sonraki basamağa değmek
+  zorundadır; CharacterBody3D orada yürür. Bu ayrım olmadan her merdiven spawn'ı
+  yanlış pozitifti (`from_floor2` gibi).
 - `audit_chain.py` ayrıca **kapı→hedef→spawn adının var olup olmadığını** denetler;
   `probe` ise o noktanın **fiziksel olarak durulabilir** olduğunu doğrular. İkisi farklı
   şeyleri bulur, ikisini de çalıştır.

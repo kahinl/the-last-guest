@@ -42,7 +42,7 @@ glow_strength = 0.7
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall"]
 albedo_texture = ExtResource("e0")
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 texture_repeat = 1
 roughness = 0.95
 uv1_scale = Vector3(7.27, 5.27, 7.27)
@@ -145,7 +145,7 @@ size = Vector3(16, 2.9, 0.3)
 size = Vector3(16, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z4"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -158,7 +158,7 @@ size = Vector3(20, 2.9, 0.3)
 size = Vector3(20, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z5"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -171,7 +171,7 @@ size = Vector3(4, 2.9, 0.3)
 size = Vector3(4, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z1"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -184,7 +184,7 @@ size = Vector3(8, 2.9, 0.3)
 size = Vector3(8, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z2"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -197,7 +197,7 @@ size = Vector3(12, 2.9, 0.3)
 size = Vector3(12, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z3"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -210,7 +210,7 @@ size = Vector3(28, 2.9, 0.3)
 size = Vector3(28, 2.9, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_z7"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -223,7 +223,7 @@ size = Vector3(0.3, 2.9, 8)
 size = Vector3(0.3, 2.9, 8)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x2"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -236,7 +236,7 @@ size = Vector3(0.3, 2.9, 12)
 size = Vector3(0.3, 2.9, 12)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x3"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -249,7 +249,7 @@ size = Vector3(0.3, 2.9, 4)
 size = Vector3(0.3, 2.9, 4)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x1"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -262,7 +262,7 @@ size = Vector3(0.3, 2.9, 16)
 size = Vector3(0.3, 2.9, 16)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x4"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -275,7 +275,7 @@ size = Vector3(0.3, 2.9, 32)
 size = Vector3(0.3, 2.9, 32)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x8"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -288,7 +288,7 @@ size = Vector3(0.3, 2.9, 28)
 size = Vector3(0.3, 2.9, 28)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x7"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -301,7 +301,7 @@ size = Vector3(0.3, 2.9, 20)
 size = Vector3(0.3, 2.9, 20)
 
 [sub_resource type="StandardMaterial3D" id="Mat_wall_x5"]
-albedo_color = Color(1, 0.9, 0.55, 1)
+albedo_color = Color(1, 0.98, 0.88, 1)
 albedo_texture = ExtResource("e0")
 texture_repeat = 1
 roughness = 0.95
@@ -1587,7 +1587,7 @@ transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, -24, 0.3
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, -24, 0.3, -24)
 
 [node name="from_level1" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.3, 24)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 20, 0.3, 24)
 
 [node name="Player" parent="." instance=ExtResource("e20")]
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, -24, 0.3, -24)
