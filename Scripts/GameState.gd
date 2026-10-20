@@ -79,6 +79,7 @@ var hub_speech_played = false
 var hub_note_seen = false
 var backrooms_survived = false
 var noclip_used = false
+var wall_thin_seen = false
 var sanity: int = 100
 var deaths: int = 0
 var step_surface: String = "wood"

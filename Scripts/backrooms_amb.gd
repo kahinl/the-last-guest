@@ -19,6 +19,10 @@ func _ready() -> void:
 	_rng.randomize()
 	if surface != "":
 		GameState.step_surface = surface
+	# Hub'a ulasan oyuncu Level 0'i "görmüş" sayılır: otel artik baska bir yer
+	var sc := get_parent()
+	if sc and String(sc.scene_file_path).contains("hub"):
+		GameState.backrooms_survived = true
 	# Backrooms'a giren oyuncu idare eder: fener artik her zaman cepte
 	GameState.flashpicked = true
 	if not GameState.flashlight_on:

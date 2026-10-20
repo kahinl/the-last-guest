@@ -55,8 +55,20 @@ func _ready() -> void:
 		if not GameState.lucid1_done:
 			GameState.lucid1_done = true
 			Speech.say(get_node_or_null("extraSpeech/line") as Label, "lucid_1")
+
+		# Ruya duvari inceltti: Backrooms'a gecis artik hazir (kolay giris)
+		GameState.box_seen = true
+		GameState.Reset2 = false
+		Speech.say(get_node_or_null("extraSpeech/line") as Label, "wall_thin")
 	else:
 		black.play("fade_out")
+		# Olum/geri donus yeniden yuklemelerinde tabanca masada kalmali;
+		# aksi halde "pi" animasyonu hic calismadan tabanca zeminin altinda kalir
+		if GameState.can_pick_pistol:
+			$Pistol.position = Vector3(1.832, 0.07, 3.876)
+		if GameState.backrooms_survived and not GameState.wall_thin_seen:
+			GameState.wall_thin_seen = true
+			Speech.say(get_node_or_null("extraSpeech/line") as Label, "under_it")
 		
 	GameState.flashlight_on = false
 	GameState.flashpicked = false

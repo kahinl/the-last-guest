@@ -49,7 +49,8 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 	# منطق الانترو (Intro Logic)
-	if anim_player and anim_player.has_animation("wake_up") and get_tree().current_scene.scene_file_path == "res://assets/main/main.tscn":
+	var _cs := get_tree().current_scene
+	if anim_player and anim_player.has_animation("wake_up") and _cs and _cs.scene_file_path == "res://assets/main/main.tscn":
 		set_physics_process(false) # تعطيل الحركة أثناء الانيميشن
 		
 		anim_player.play("wake_up")
@@ -91,8 +92,9 @@ func _ready():
 	# منطق الـ Spawn Points
 	if get_node_or_null("/root/FadeLayer") != null:
 		var spawn_name = FadeLayer.next_spawn_name
-		if get_tree().current_scene.has_node("SpawnPoints"):
-			var spawns = get_tree().current_scene.get_node("SpawnPoints")
+		var _sc := get_tree().current_scene
+		if _sc and _sc.has_node("SpawnPoints"):
+			var spawns = _sc.get_node("SpawnPoints")
 			if spawns.has_node(spawn_name):
 				var spawn_point = spawns.get_node(spawn_name)
 				global_transform = spawn_point.global_transform
@@ -146,12 +148,14 @@ func _physics_process(delta):
 			velocity.z = direction.z * speed
 			
 			# صوت الخطوات
-			if get_tree().current_scene.scene_file_path == "res://assets/main/main.tscn":
+			var cs := get_tree().current_scene
+			var csp := cs.scene_file_path if cs else ""
+			if csp == "res://assets/main/main.tscn":
 				var main_steps = get_node_or_null("../footSteps")
 				if main_steps and not main_steps.playing:
 					main_steps.play(4)
 			else:
-				if get_tree().current_scene.scene_file_path == "res://assets/Dream/dream.tscn":
+				if csp == "res://assets/Dream/dream.tscn":
 					var steps = get_node_or_null("../steps")
 					if steps and not steps.playing:
 						steps.play(0.87)

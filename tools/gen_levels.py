@@ -124,7 +124,8 @@ def emit_level(name, spec):
             '[sub_resource type="StandardMaterial3D" id="Mat_item_%s"]' % k,
             "albedo_color = Color(%s)" % c, "roughness = 0.6",
             "metallic = 0.3", "emission_enabled = true",
-            "emission = Color(%s)" % c, "emission_energy_multiplier = 0.35"]))
+            "emission = Color(%s)" % c,
+            "emission_energy_multiplier = %s" % (1.4 if k == "key" else 0.35)]))
 
     # paylasim mesh/shape
     def boxmesh(mid, sx, sy, sz):
