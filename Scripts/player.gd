@@ -201,7 +201,7 @@ func _physics_process(delta):
 			# Eskiden burada create_timer + await vardi: bos dururken her fizik
 			# karesinde 2 timer doguyordu ve asagidaki move_and_slide + girdi
 			# okuma ~0.45 s erteleniyordu, yani E/F basinlari kaybolabiliyordu.
-			_stop_footsteps(0.2)
+			_stop_footsteps()
 
 			velocity.x = lerp(velocity.x, 0.0, delta * 7.0)
 			velocity.z = lerp(velocity.z, 0.0, delta * 7.0)
@@ -269,18 +269,20 @@ func activate():
 func freeze():
 	frozen = true
 	# إيقاف أصوات الخطوات عند التجميد
-	_stop_footsteps(0.0)
+	_stop_footsteps()
 
 
-##  fade > 0: adim sesi aniden kesilmesin, kisa bir gecisle sussun.
-func _stop_footsteps(fade: float) -> void:
+##  AudioStreamPlayer.stop() Godot 4'te fade argumani kabul etmez; bu yuzden
+##  buradan ses kismadan gecis yapilamaz. Cagrilma yeri hareket durdugu an ve
+##  freeze(): ikisinde de aniden susma davranisi kabul edilebilir.
+func _stop_footsteps() -> void:
 	if _foot_main and _foot_main.playing:
-		_foot_main.stop(fade)
+		_foot_main.stop()
 	if _foot_dream and _foot_dream.playing:
-		_foot_dream.stop(fade)
+		_foot_dream.stop()
 	for n in _foot_surfaces:
 		if n.playing:
-			n.stop(fade)
+			n.stop()
 
 
 func _step_node_name() -> String:
