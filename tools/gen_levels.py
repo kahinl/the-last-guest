@@ -69,10 +69,10 @@ def emit_level(name, spec):
 
     # palet
     pal = spec["pal"]
-    wall_tex = b.x(pal["wall"], "Resource")
-    floor_tex = b.x(pal["floor"], "Resource")
-    ceil_tex = b.x(pal["ceil"], "Resource")
-    panel_tex = b.x("res://assets/backrooms/textures/LightPanel.res", "Resource")
+    wall_tex = b.x(pal["wall"], "Texture2D")
+    floor_tex = b.x(pal["floor"], "Texture2D")
+    ceil_tex = b.x(pal["ceil"], "Texture2D")
+    panel_tex = b.x("res://assets/backrooms/textures/LightPanel.res", "Texture2D")
 
     env_id = sub("Env", "\n".join([
         '[sub_resource type="Environment" id="Env"]',
@@ -296,7 +296,7 @@ def emit_level(name, spec):
         base = texpath.split("/")[-1].split(".")[0]
         mid = "MatP_" + base
         if mid not in prop_mat_cache:
-            eid = b.x(texpath, "Resource")
+            eid = b.x(texpath, "Texture2D")
             prop_mat_cache[mid] = sub(mid, "\n".join([
                 '[sub_resource type="StandardMaterial3D" id="%s"]' % mid,
                 'albedo_texture = ExtResource("%s")' % eid,
@@ -338,7 +338,7 @@ def emit_level(name, spec):
         base = texpath.split("/")[-1].split(".")[0]
         mid = "MatD_" + base
         if mid not in decal_mat_cache:
-            eid = b.x(texpath, "Resource")
+            eid = b.x(texpath, "Texture2D")
             decal_mat_cache[mid] = sub(mid, "\n".join([
                 '[sub_resource type="StandardMaterial3D" id="%s"]' % mid,
                 'albedo_texture = ExtResource("%s")' % eid,

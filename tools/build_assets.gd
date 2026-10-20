@@ -40,11 +40,31 @@ func _textures() -> void:
 		if not d.current_is_dir() and (f.ends_with(".png") or f.ends_with(".jpg")):
 			var img: Image = Image.load_from_file(SRC + f)
 			if img:
-				var err := ResourceSaver.save(img, TEX + f.get_basename() + ".res")
-				print("TEX ", f, " ", "OK" if err == OK else "FAIL")
+				_save_tex(img, TEX + f.get_basename() + ".res")
 			else:
 				print("TEX ", f, " LOADFAIL")
 		f = d.get_next()
+
+
+##  Malzemeler albedo_texture = Texture2D bekliyor. Ham Image kaydedilirse
+##  Godot onu texture olarak kabul etmiyor ve yuzey DOKUSUZ (düz renkli)
+##  render ediliyor — Backrooms'da aylarca fark edilmeyen buyuk goruntu hatasi
+##  buydu. Ayrica GPU tarafinda mipmap oldugu icin uzaktaki duvarlar
+##  titremek yerine yumusak kaliyor.
+func _save_tex(img: Image, path: String) -> void:
+	if img == null:
+		print("TEX FAIL ", path)
+		return
+	var w: int = img.get_width()
+	var h: int = img.get_height()
+	if not img.has_mipmaps() and _is_pot(w) and _is_pot(h):
+		img.generate_mipmaps()
+	var err := ResourceSaver.save(ImageTexture.create_from_image(img), path)
+	print("TEX ", path.get_file(), " ", w, "x", h, " ", "OK" if err == OK else "FAIL")
+
+
+func _is_pot(v: int) -> bool:
+	return v > 0 and (v & (v - 1)) == 0
 
 
 func _procedural() -> void:
@@ -63,7 +83,7 @@ func _procedural() -> void:
 			var c := img.get_pixel(x, y)
 			var n := (rnd.randf() - 0.5) * 0.06
 			img.set_pixel(x, y, Color(c.r + n, c.g + n, c.b + n))
-	ResourceSaver.save(img, TEX + "CeilingTiles.res")
+	_save_tex(img, TEX + "CeilingTiles.res")
 	# Floresan panel (diffuzor + metal cerceve)
 	var w := 256
 	var h := 128
@@ -75,7 +95,7 @@ func _procedural() -> void:
 	for y in range(h):
 		p.set_pixel(0, y, Color(0.3, 0.3, 0.3)); p.set_pixel(1, y, Color(0.3, 0.3, 0.3))
 		p.set_pixel(w - 1, y, Color(0.3, 0.3, 0.3)); p.set_pixel(w - 2, y, Color(0.3, 0.3, 0.3))
-	ResourceSaver.save(p, TEX + "LightPanel.res")
+	_save_tex(p, TEX + "LightPanel.res")
 	print("TEX procedural CeilingTiles/LightPanel OK")
 
 
