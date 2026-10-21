@@ -126,15 +126,22 @@ def emit_level(name, spec):
         "albedo_color = Color(%s)" % pal["door_c"], "roughness = 0.8"]))
 
     # item malzemeleri (tiklenebilir nesneler icin farkli renkler)
+    # OKUNUR nesneler (note/box) artik emissive DEGIL: G28'in "parlayan kutu"
+    # sikayeti tam olarak buydu — oyuncu tahta kus degil isik veren bir kup
+    # goruyordu. Bulunmasi Gereken ilerleme nesneleri (key/fuse/valve/water)
+    # karanlik labirentte isildasin, yoksa bulunamazlar.
     item_cols = {"key": "0.95, 0.8, 0.15, 1", "fuse": "0.85, 0.2, 0.2, 1",
                  "valve": "0.2, 0.75, 0.8, 1", "box": "0.5, 0.35, 0.2, 1",
                  "note": "0.9, 0.9, 0.85, 1", "water": "0.4, 0.7, 0.95, 1"}
+    GLOW_KINDS = ("key", "fuse", "valve", "water")
     item_mats = {}
     for k, c in item_cols.items():
+        glow = k in GLOW_KINDS
         item_mats[k] = sub("Mat_item_%s" % k, "\n".join([
             '[sub_resource type="StandardMaterial3D" id="Mat_item_%s"]' % k,
             "albedo_color = Color(%s)" % c, "roughness = 0.6",
-            "metallic = 0.3", "emission_enabled = true",
+            "metallic = %s" % (0.3 if glow else 0.0),
+            "emission_enabled = %s" % ("true" if glow else "false"),
             "emission = Color(%s)" % c,
             "emission_energy_multiplier = %s" % (1.4 if k == "key" else 0.35)]))
 
@@ -147,6 +154,10 @@ def emit_level(name, spec):
                                    "size = Vector3(%g, %g, %g)" % (sx, sy, sz)]))
     m_panel = boxmesh("Mesh_panel", 1.2, 0.06, 0.6)
     m_item = boxmesh("Mesh_item", 0.4, 0.4, 0.4); s_item = boxshape("Col_item", 0.5, 0.5, 0.5)
+    # items["stand"] icin koyu ahşap kürsü/masa malzemesi (emisssion yok: mobilya)
+    mat_stand = sub("Mat_stand", "\n".join([
+        '[sub_resource type="StandardMaterial3D" id="Mat_stand"]',
+        "albedo_color = Color(0.28, 0.17, 0.09, 1)", "roughness = 0.85"]))
     m_door = boxmesh("Mesh_door", 3.8, 2.6, 0.35); s_door = boxshape("Col_door", 3.8, 2.6, 0.35)
     m_slab = boxmesh("Mesh_slab", W * S + T, 0.2, Hh * S + T)
     s_slab = boxshape("Col_slab", W * S + T, 0.2, Hh * S + T)
@@ -379,25 +390,53 @@ def emit_level(name, spec):
         hid = b.x(HOVER, "Texture2D", HOVER_UID)
         x, z = cell_world(it["cx"], it["cz"], W, Hh)
         y = it.get("y", 0.5)
-        nodes.append("\n".join([
+        # Boyut verilirse nesneye ozel mesh+shape (ornegin acik kitap),
+        # verilmezse paylasilan 40 cm kutu. Kutu her sey ayni gorunuyordu.
+        sz = it.get("size")
+        col = it.get("col") or sz
+        if sz or col:
+            mi = boxmesh("Mesh_item_" + it["name"], sz[0], sz[1], sz[2])
+            si = boxshape("Col_item_" + it["name"], col[0], col[1], col[2])
+        else:
+            mi, si = m_item, s_item
+        ry = it.get("ry", 0.0)
+        c, s = math.cos(ry), math.sin(ry)
+        lines = [
             '[node name="%s" type="StaticBody3D" parent="."]' % it["name"],
-            "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, %g, %g, %g)" % (x, y, z),
+            "transform = Transform3D(%g, 0, %g, 0, 1, 0, %g, 0, %g, %g, %g, %g)" % (c, s, -s, c, x, y, z),
             'script = ExtResource("%s")' % iid,
             'flag_name = "%s"' % it["flag"],
             'speech_key = "%s"' % it["key"],
             ('destroy_on_pick = true' if it.get("pick") else 'destroy_on_pick = false'),
             ('requires_flag = "%s"' % it["req"]) if it.get("req") else 'requires_flag = ""',
             ('add_sanity = %d' % it["add_sanity"]) if it.get("add_sanity") else 'add_sanity = 0',
+            ('second_key = "%s"' % it["key2"]) if it.get("key2") else 'second_key = ""',
+            ('second_flag = "%s"' % it["flag2"]) if it.get("flag2") else 'second_flag = ""',
+            ('death_key = "%s"' % it["deathkey"]) if it.get("deathkey") else 'death_key = ""',
             '[node name="CollisionShape3D" type="CollisionShape3D" parent="%s"]' % it["name"],
-            'shape = SubResource("%s")' % s_item,
+            'shape = SubResource("%s")' % si,
             '[node name="MeshInstance3D" type="MeshInstance3D" parent="%s"]' % it["name"],
-            'mesh = SubResource("%s")' % m_item,
-            'surface_material_override/0 = SubResource("%s")' % item_mats[it.get("kind", "box")],
+            'mesh = SubResource("%s")' % mi,
+            'surface_material_override/0 = SubResource("%s")' % item_mats[it.get("kind", "box")]]
+        # stand=[genislik, yukseklik, derinlik]: nesnenin ALTina konan gorsel
+        # bir kürsü/masa. Carpmasi YOK (cocuk MeshInstance3D), yoksa masanin
+        # kendisi de tiklanabilir olurdu.
+        st = it.get("stand")
+        if st:
+            sm = boxmesh("Mesh_stand_" + it["name"], st[0], st[1], st[2])
+            lines += [
+                '[node name="Stand" type="MeshInstance3D" parent="%s"]' % it["name"],
+                "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, %g, 0)" % (
+                    st[1] / 2.0 - y),
+                'mesh = SubResource("%s")' % sm,
+                'surface_material_override/0 = SubResource("%s")' % mat_stand]
+        lines += [
             '[node name="play1" type="CanvasLayer" parent="%s"]' % it["name"],
             "layer = 3",
             '[node name="hover" type="Sprite2D" parent="%s/play1"]' % it["name"],
             "visible = false", "position = Vector2(947, 494)",
-            "scale = Vector2(0.06, 0.06)", 'texture = ExtResource("%s")' % hid]))
+            "scale = Vector2(0.06, 0.06)", 'texture = ExtResource("%s")' % hid]
+        nodes.append("\n".join(lines))
 
     # --- kapi lar ---
     for d in spec.get("doors", []):
@@ -597,17 +636,24 @@ BUZZ = A + "537769__janbezouska__factory-fluorescent-light-buzz.ogg.res"
 LIGHTS = A + "547799__joelspace__florescent-lights-of-the-backrooms-1.ogg.res"
 DANGER = A + "Ambient_Danger.ogg.res"
 UNDER = A + "amb_underground_room.ogg.res"
-SMILER = A + "smiler_idle_drone.ogg.res"
 WHISPER = A + "watcher_static_stare.ogg.res"
-BREATH = A + "BreathScared.ogg.res"
-GROWL = A + "Mutant_Growl_01.ogg.res"
-GROWL2 = A + "Mutant_Growl_02.ogg.res"
-SCREAM = A + "Mutant_Scream.ogg.res"
-HELP = A + "HELP.ogg.res"
+
+##  Arc'in kendi sesi: oteldeki nesnelerin bükülmüş hâlleri (ffmpeg ile
+##  assets/backrooms/src/'e üretildi). Gerekçe: smiler / mutant hırlaması /
+##  çılgın kahkaha / uzak HELP, Backrooms hayranlarının "aşırı kullanılmış"
+##  diye listelediği kalıpların ta kendisiydi ve arc'ı bu oyunun derdinden
+##  çok bir hayran işi gibi gösteriyordu. Aşağıdaki altı cue'nun hepsi otelde
+##  zaten duyulan bir şeyin aşağıda yanlış hâli. Eski dosyalar src/ altında
+##  duruyor ama hiçbir seviye artık onları çekmiyor.
+KITCHEN = A + "kitchen_hum.ogg.res"        # kaynayan su, 0.45x + alçak geçiren
+BREATHFAR = A + "far_breathing.ogg.res"    # ağır nefes, kalınlaştırılmış
+DOORFAR = A + "locked_door_far.ogg.res"    # kapı çarpması, yankılı (HELP yerine)
+HEARTBEAT = A + "slow_heartbeat.ogg.res"   # kalp atışı, 0.4x (böcek vızıltısı yerine)
+VOICE = A + "voice_trying.ogg.res"         # fısıltılar: bir şey SÖYLEMEYE çalışan varlık
+KETTLE = A + "kettle_scream.ogg.res"       # çaydanlık ıslığı — çay motifi (T.E.A./Ç.A.Y.)
+
 METAL = A + "Metal_Impact.ogg.res"
-LAUGH = A + "187736__jasonthedemon__crazy-laugh-echo.ogg.res"
 GEN = A + "generator-off.ogg.res"
-ENTBUZZ = A + "175210__minigunfiend__creatures-loud-buzz.ogg.res"
 
 L0 = "res://assets/Backrooms/level0.tscn"
 L1 = "res://assets/Backrooms/level1.tscn"
@@ -665,10 +711,10 @@ LEVEL0 = dict(
     audio=[
         dict(name="buzz", cx=1, cz=1, stream=BUZZ, vol=-6, maxd=12),
         dict(name="ambLights", cx=7, cz=7, stream=LIGHTS, vol=-5, maxd=30),
-        dict(name="smiler", cx=9, cz=3, stream=SMILER, vol=-9, maxd=10),
+        dict(name="kitchen", cx=9, cz=3, stream=KITCHEN, vol=-9, maxd=14),
         dict(name="whisper", cx=7, cz=11, stream=WHISPER, vol=-3, maxd=26, autoplay=False),
-        dict(name="laugh", cx=13, cz=13, stream=LAUGH, vol=-4, maxd=16, autoplay=False)],
-    amb=dict(whisper="whisper", growl="laugh", surface="wood", drain=True, rate=0.35),
+        dict(name="breath", cx=13, cz=13, stream=BREATHFAR, vol=-4, maxd=16, autoplay=False)],
+    amb=dict(whisper="whisper", growl="breath", surface="wood", drain=True, rate=0.35),
     props=[
         prop("bar1", BARREL, 5, 1, ry=0.4),
         prop("crate1", CRATE, 1, 5, ry=0.9),
@@ -721,10 +767,10 @@ LEVEL1 = dict(
     audio=[
         dict(name="gen", cx=7, cz=7, stream=GEN, vol=-8, maxd=26),
         dict(name="under", cx=1, cz=7, stream=UNDER, vol=-6, maxd=20),
-        dict(name="help", cx=13, cz=1, stream=HELP, vol=-2, maxd=22, autoplay=False),
+        dict(name="doorfar", cx=13, cz=1, stream=DOORFAR, vol=-2, maxd=22, autoplay=False),
         dict(name="metal", cx=9, cz=9, stream=METAL, vol=-4, maxd=18, autoplay=False),
         dict(name="danger", cx=13, cz=13, stream=DANGER, vol=-10, maxd=14)],
-    amb=dict(whisper="help", growl="metal", surface="concrete", drain=True, rate=0.6),
+    amb=dict(whisper="doorfar", growl="metal", surface="concrete", drain=True, rate=0.6),
     props=[
         prop("bar1", BARREL, 5, 1, ry=0.3),
         prop("crate1", CRATE, 13, 5, ry=1.2),
@@ -773,13 +819,12 @@ LEVEL2 = dict(
         dict(name="toHub", cx=13, cz=13, dir="E", target=LH, spawn="from_level2",
              flags="level2_valve", need_key="level2_locked")],
     audio=[
-        dict(name="ent", cx=7, cz=7, stream=ENTBUZZ, vol=-7, maxd=20),
+        dict(name="heartbeat", cx=7, cz=7, stream=HEARTBEAT, vol=-7, maxd=20),
         dict(name="danger", cx=13, cz=13, stream=DANGER, vol=-8, maxd=16),
-        dict(name="growl", cx=7, cz=1, stream=GROWL, vol=-2, maxd=24, autoplay=False),
-        dict(name="growl2", cx=11, cz=9, stream=GROWL2, vol=-2, maxd=24, autoplay=False),
-        dict(name="scream", cx=13, cz=13, stream=SCREAM, vol=-3, maxd=20, autoplay=False),
+        dict(name="voice", cx=7, cz=1, stream=VOICE, vol=-2, maxd=24, autoplay=False),
+        dict(name="breath", cx=11, cz=9, stream=BREATHFAR, vol=-2, maxd=24, autoplay=False),
         dict(name="metal", cx=3, cz=9, stream=METAL, vol=-5, maxd=16, autoplay=False)],
-    amb=dict(whisper="growl", growl="scream", sfx="metal", surface="metal", drain=True, rate=0.95),
+    amb=dict(whisper="voice", growl="breath", sfx="metal", surface="metal", drain=True, rate=0.95),
     entities=[dict(name="stalker", cx=11, cz=13)],
     props=[
         prop("bar1", BARREL, 13, 1, ry=0.5),
@@ -811,9 +856,18 @@ HUB = dict(
     pal=PH, spawn=dict(cx=5, cz=5),
     spawns=[dict(name="default", cx=5, cz=5), dict(name="from_level2", cx=5, cz=5)],
     lights=[dict(cx=5, cz=1, e=1.1), dict(cx=1, cz=5), dict(cx=9, cz=5),
-            dict(cx=5, cz=5, e=1.3), dict(cx=5, cz=9)],
+            dict(cx=5, cz=5, e=1.3), dict(cx=5, cz=9),
+            # defterin ustunde kisaca dar ama parlak bir havuz: bos sarı odada
+            # tek onemli nesne 10 cm'lik bir kutuydu ve gormek imkansizdi
+            dict(cx=5, cz=3, e=2.0, range=5.0)],
     items=[dict(name="hubnote", cx=5, cz=3, kind="note", flag="hub_note_seen",
-                key="hub_note")],
+                key="hub_note", key2="hub_note_2", flag2="hub_note_2_seen",
+                deathkey="hub_note_dead",
+                # acik kitap: 62x5x44 cm, kursorun ustunde okuma yuksekliginde,
+                # hafif cevrilmis. carpisma kutusu masa kadar (gorsel kursor
+                # solidur), boylece raycast rahat isabet eder.
+                size=[0.62, 0.05, 0.44], col=[0.72, 1.06, 0.58],
+                y=1.03, ry=0.35, stand=[0.7, 1.0, 0.55])],
     doors=[
         dict(name="toHotel", cx=5, cz=1, dir="N", target=BASE, spawn="from_backrooms",
              need_key=""),

@@ -18,12 +18,15 @@ extends StaticBody3D
 @export var reward_key: String = ""
 @export var reward_flag: String = ""
 @export var add_sanity: int = 0
+##  Oyuncu daha once olmusse ilk okumada bu anahtar oynanir (hub defteri:
+##  "sayfa eskisinden uzun"). Bos ise davranis degismez.
+@export var death_key: String = ""
 
 var _used := false
 
 
 func _ready() -> void:
-	if destroy_on_pick and flag_name != "" and bool(GameState.get(flag_name)):
+	if destroy_on_pick and flag_name != "" and GameState.flag(flag_name):
 		queue_free()
 		return
 	if requires_flag != "":
@@ -39,7 +42,7 @@ func _on_game_state_flag_set(name: String, _value: Variant) -> void:
 
 
 func _requirements_ok() -> bool:
-	return requires_flag == "" or bool(GameState.get(requires_flag)) == requires_value
+	return requires_flag == "" or GameState.flag(requires_flag) == requires_value
 
 
 func _apply_visibility() -> void:
@@ -53,15 +56,17 @@ func interact() -> void:
 		return
 
 	var key := speech_key
+	if death_key != "" and int(GameState.deaths) > 0:
+		key = death_key
 	var flag := flag_name
 
 	# Ikinci asamali inceleme: ayna (bath_2 -> symptom_2) gibi
-	if flag != "" and bool(GameState.get(flag)) and second_key != "":
-		if second_flag != "" and bool(GameState.get(second_flag)):
+	if flag != "" and GameState.flag(flag) and second_key != "":
+		if second_flag != "" and GameState.flag(second_flag):
 			return
 		key = second_key
 		flag = second_flag
-	elif flag != "" and bool(GameState.get(flag)):
+	elif flag != "" and GameState.flag(flag):
 		return
 
 	# Konusma boyunca kilit; iki asamali incelemelerde ikinci tur icin tekrar acilir

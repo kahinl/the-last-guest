@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=4]
+[gd_scene load_steps=75 format=4]
 
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/Wallpaper2.res" id="e0"]
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/Floor_carpet_clean_BaseColor.res" id="e1"]
@@ -91,16 +91,16 @@ emission_energy_multiplier = 0.35
 [sub_resource type="StandardMaterial3D" id="Mat_item_box"]
 albedo_color = Color(0.5, 0.35, 0.2, 1)
 roughness = 0.6
-metallic = 0.3
-emission_enabled = true
+metallic = 0.0
+emission_enabled = false
 emission = Color(0.5, 0.35, 0.2, 1)
 emission_energy_multiplier = 0.35
 
 [sub_resource type="StandardMaterial3D" id="Mat_item_note"]
 albedo_color = Color(0.9, 0.9, 0.85, 1)
 roughness = 0.6
-metallic = 0.3
-emission_enabled = true
+metallic = 0.0
+emission_enabled = false
 emission = Color(0.9, 0.9, 0.85, 1)
 emission_energy_multiplier = 0.35
 
@@ -120,6 +120,10 @@ size = Vector3(0.4, 0.4, 0.4)
 
 [sub_resource type="BoxShape3D" id="Col_item"]
 size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_stand"]
+albedo_color = Color(0.28, 0.17, 0.09, 1)
+roughness = 0.85
 
 [sub_resource type="BoxMesh" id="Mesh_door"]
 size = Vector3(3.8, 2.6, 0.35)
@@ -274,6 +278,15 @@ cull_mode = 0
 shading_mode = 0
 vertex_color_use_as_albedo = false
 polygon_offset_enabled = true
+
+[sub_resource type="BoxMesh" id="Mesh_item_hubnote"]
+size = Vector3(0.62, 0.05, 0.44)
+
+[sub_resource type="BoxShape3D" id="Col_item_hubnote"]
+size = Vector3(0.72, 1.06, 0.58)
+
+[sub_resource type="BoxMesh" id="Mesh_stand_hubnote"]
+size = Vector3(0.7, 1, 0.55)
 
 [node name="hub" type="Node3D"]
 
@@ -660,6 +673,16 @@ light_color = Color(1, 0.97, 0.85, 1)
 light_energy = 0.45
 omni_range = 13.0
 
+[node name="lamp5" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85, -8)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="lamp5"]
+mesh = SubResource("Mesh_panel")
+surface_material_override/0 = SubResource("Mat_panel")
+[node name="OmniLight3D" type="OmniLight3D" parent="lamp5"]
+light_color = Color(1, 0.97, 0.85, 1)
+light_energy = 2.0
+omni_range = 5.0
+
 [node name="panel_1_1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.84, -16)
 mesh = SubResource("Mesh_panel")
@@ -857,18 +880,25 @@ surface_material_override/0 = SubResource("MatD_Decals_papers_BaseColor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0, 16)
 
 [node name="hubnote" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -8)
+transform = Transform3D(0.939373, 0, 0.342898, 0, 1, 0, -0.342898, 0, 0.939373, 0, 1.03, -8)
 script = ExtResource("e12")
 flag_name = "hub_note_seen"
 speech_key = "hub_note"
 destroy_on_pick = false
 requires_flag = ""
 add_sanity = 0
+second_key = "hub_note_2"
+second_flag = "hub_note_2_seen"
+death_key = "hub_note_dead"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="hubnote"]
-shape = SubResource("Col_item")
+shape = SubResource("Col_item_hubnote")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="hubnote"]
-mesh = SubResource("Mesh_item")
+mesh = SubResource("Mesh_item_hubnote")
 surface_material_override/0 = SubResource("Mat_item_note")
+[node name="Stand" type="MeshInstance3D" parent="hubnote"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.53, 0)
+mesh = SubResource("Mesh_stand_hubnote")
+surface_material_override/0 = SubResource("Mat_stand")
 [node name="play1" type="CanvasLayer" parent="hubnote"]
 layer = 3
 [node name="hover" type="Sprite2D" parent="hubnote/play1"]

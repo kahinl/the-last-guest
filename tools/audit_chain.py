@@ -103,6 +103,26 @@ for rel, (nodes, _e) in scenes.items():
         if sk and sk not in lang_keys:
             errors.append("%s:%d %s speech_key '%s' not in lang.csv" % (rel, n["line"], n["name"], sk))
 
+# Bayrak adlarinin GameState'te BILDIRILMIS olmasi sart. Bildirilmemis bir ad
+# yuzden set() sessizce basarisiz olur, get() null doner ve bool(null) o
+# etkilesimi tamamiyla kirar -- hub_note_2_seen'de gercekten boyle oldu.
+with open(os.path.join(ROOT, "Scripts/GameState.gd"), encoding="utf-8", errors="replace") as f:
+    declared = set(re.findall(r"^var ([A-Za-z0-9_]+)", f.read(), re.M))
+print("gamestate_flags=%d" % len(declared))
+FLAG_PROPS = ("flag_name", "requires_flag", "second_flag", "reward_flag", "counter_name")
+for rel, (nodes, _e) in scenes.items():
+    for n in nodes:
+        p = n["props"]
+        for prop in FLAG_PROPS:
+            v = p.get(prop, "").strip('"')
+            if v and v not in declared:
+                errors.append("%s:%d %s %s -> GameState'te bildirilmemis bayrak '%s'"
+                              % (rel, n["line"], n["name"], prop, v))
+        for fl in [x.strip() for x in p.get("required_flags", "").strip('"').split(",") if x.strip()]:
+            if fl != "__never__" and fl not in declared:
+                errors.append("%s:%d %s required_flags -> bildirilmemis bayrak '%s'"
+                              % (rel, n["line"], n["name"], fl))
+
 # entity instancelar ve script referanslari
 for rel, (nodes, exts) in scenes.items():
     for n in nodes:

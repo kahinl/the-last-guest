@@ -211,6 +211,54 @@ Edith Finch yapıları) iki somut kusuru doğruladı:
 > (Varlık tasarımı bu eşitliğe *bağlı değil*: yakalanamama durumu zaten hız
 > farkından değil, kilitlenip durmadan koşmasından geliyordu.)
 
+### Arc'ın ses sözlüğü otelden türetildi, defter gerçek bir nesne oldu
+
+**Ses.** Araştırmanın "aşırı kullanılmış" listesi tam olarak bizim kullandığımız
+şeylerdi, ve kopya gibi duran katman metin değil **sesti**:
+
+| Nerede | Eski (ödünç) | Yeni (otelden bükülmüş) |
+|---|---|---|
+| level0 uğultu | `smiler_idle_drone` (**Smiler**) | `kitchen_hum` — kaynayan su, 0.45x + alçak geçiren |
+| level0 tehlike | `crazy-laugh-echo` (kahkaha) | `far_breathing` — ağır nefes, kalınlaştırılmış |
+| level1 fısıltı | `HELP.ogg` | `locked_door_far` — yankılı kapı çarpması |
+| level2 ambiyans | `creatures-loud-buzz` | `slow_heartbeat` — 0.4x kalp atışı |
+| **varlık uyanış** | `creatures-loud-buzz` | `voice_trying` — fısıltılar: *bir şey söylemeye* çalışan varlık |
+| **varlık yakalama** | `Mutant_Scream` | `kettle_scream` — **çaydanlık ıslığı** (oyunun T.E.A./Ç.A.Y. motifi) |
+
+Altı cue da `assets/backrooms/src/`'e ffmpeg ile üretildi (Vorbis şart:
+`AudioStreamOggVorbis` Opus'u kabul etmiyor) ve `build_assets.gd` ile `.res`'e
+çevrildi; `kitchen_hum` + `slow_heartbeat` `LOOP_KEYS`'e eklendi (döngü bayrağı
+çalışma anında doğrulandı). Eski dosyalar `src/`'de duruyor ama artık hiçbir
+seviye çekmiyor; `gen_levels.py`'deki ölü sabitler silindi.
+
+**Defter.** `hub_note` boş sarı odada kaybolan 40 cm'lik bir küptü. Artı:
+kürsü (`stand`) üstünde okuma yüksekliğinde (y=1.03), 62×5×44 cm'lik açık kitap
+formunda, 20° çevrilmiş, üstünde dar ve parlak bir ışık havuzu (`lamp5`,
+e=2.0, range=5.0). Çarpışma kutusu masa kadar (`col`), böylece etkileşin
+raycast'i ıskalamıyor. Render ile doğrulandı:
+`/storage/emulated/0/Download/tlg-shots/hubdesk3_a.png`.
+
+Okunur nesnelerden (`note`, `box`) **emissive kaldırıldı** — G28'in "parlayan
+küp" şikâyetinin kaynağı buydu. Bulunması gereken ilerleme nesneleri
+(`key/fuse/valve/water`) karanlıkta isildamaya devam ediyor.
+
+**Üç okuma.** Defter artık üç hâlde: ilk dokunuş `hub_note`; ikinci dokunuş
+`hub_note_2` (*"Sayfanın altında ikinci bir isim var. Benim değil… O benden önce
+giriş yaptı ve hiç çıkış yapmadı"* — ağabey); ve **oyuncu arc'ta ölmüşse** ilk
+okuma `hub_note_dead` oluyor (*"Sayfa eskisinden daha uzun. Aynı isim, aynı el,
+daha çok satır"*) — `GameState.deaths` sayısını ceza değil hikâye yapan şey bu.
+Bunun için `inspect_item`'a `death_key` eklendi. `tools/test_hubnote.tscn` dört
+yolun hepsini doğruluyor.
+
+> **Bu kısımda bulunan gerçek hata:** `hub_note_2_seen` bayrağı `GameState`'te
+> deklare edilmemişti. `set()` bildirilmemiş bir ada karşı sessizce başarısız
+> oluyor, `get()` null dönüyor ve `bool(null)` → `Invalid call. Nonexistent
+> 'bool' constructor` ile **etkileşimi komple kırıyor**. Kalıcı çözüm:
+> `GameState.flag(name)` (yoksa uyarı + false) ve `set_flag`'te uyarı; tüm
+> `bool(GameState.get(...))` okumaları bundan geçiyor. `audit_chain.py` artık
+> her sahnenin bayrak referanslarını 98 bildirilmiş adla çaprazlıyor
+> (`gamestate_flags=98`, 0 hata) — bu sınıf hata bir daha sessiz kalamaz.
+
 ---
 
 ## Kalan işler — 2026-10-20 devir notu

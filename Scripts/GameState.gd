@@ -7,8 +7,24 @@ signal flag_set(name: String, value: Variant)
 
 
 func set_flag(name: String, value: Variant) -> void:
+	# Tanimsiz bir ada set() sessizce basarisiz olur; sonra okunduğunda null
+	# doner ve bool(null) etkilesimi KIRAR (hub_note_2_seen ornegi). Uyariyi
+	# burada birakmak o sinifi hatalari gorunur kiliyor.
+	if get(name) == null:
+		push_warning("GameState: tanimsiz bayrak: %s" % name)
 	set(name, value)
 	flag_set.emit(name, value)
+
+
+##  Bayrak okumalarinda kullanilacak guvenli kapı: yoksa false + uyari.
+func flag(name: String) -> bool:
+	if name == "":
+		return false
+	var v: Variant = get(name)
+	if v == null:
+		push_warning("GameState: tanimsiz bayrak okundu: %s" % name)
+		return false
+	return bool(v)
 
 
 var interaction_locked = false
@@ -92,6 +108,10 @@ var level2_valve = false
 var level2_saw_help = false
 var hub_speech_played = false
 var hub_note_seen = false
+##  Defterin IKINCI okumasi ("sayfanin altinda ikinci isim" — agabey).
+##  Bu satir eksikti: hub_note_2_seen deklare edilmedigi icin set() sessizce
+##  basarisiz oluyor, get() null donuyor ve bool(null) etkilesimi kiryordu.
+var hub_note_2_seen = false
 var backrooms_survived = false
 var noclip_used = false
 var wall_thin_seen = false

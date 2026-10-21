@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=4]
+[gd_scene load_steps=95 format=4]
 
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/Wallpaper2.res" id="e0"]
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/Floor_carpet_clean_BaseColor.res" id="e1"]
@@ -6,9 +6,9 @@
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/LightPanel.res" id="e3"]
 [ext_resource type="Resource" path="res://assets/backrooms/audio/537769__janbezouska__factory-fluorescent-light-buzz.ogg.res" id="e4"]
 [ext_resource type="Resource" path="res://assets/backrooms/audio/547799__joelspace__florescent-lights-of-the-backrooms-1.ogg.res" id="e5"]
-[ext_resource type="Resource" path="res://assets/backrooms/audio/smiler_idle_drone.ogg.res" id="e6"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/kitchen_hum.ogg.res" id="e6"]
 [ext_resource type="Resource" path="res://assets/backrooms/audio/watcher_static_stare.ogg.res" id="e7"]
-[ext_resource type="Resource" path="res://assets/backrooms/audio/187736__jasonthedemon__crazy-laugh-echo.ogg.res" id="e8"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/far_breathing.ogg.res" id="e8"]
 [ext_resource type="Resource" path="res://assets/backrooms/meshes/Barrel_LOD0.mesh.res" id="e9"]
 [ext_resource type="Texture2D" path="res://assets/backrooms/textures/Barrel_White_Albedo.res" id="e10"]
 [ext_resource type="Resource" path="res://assets/backrooms/meshes/BreakableCrate.mesh.res" id="e11"]
@@ -96,16 +96,16 @@ emission_energy_multiplier = 0.35
 [sub_resource type="StandardMaterial3D" id="Mat_item_box"]
 albedo_color = Color(0.5, 0.35, 0.2, 1)
 roughness = 0.6
-metallic = 0.3
-emission_enabled = true
+metallic = 0.0
+emission_enabled = false
 emission = Color(0.5, 0.35, 0.2, 1)
 emission_energy_multiplier = 0.35
 
 [sub_resource type="StandardMaterial3D" id="Mat_item_note"]
 albedo_color = Color(0.9, 0.9, 0.85, 1)
 roughness = 0.6
-metallic = 0.3
-emission_enabled = true
+metallic = 0.0
+emission_enabled = false
 emission = Color(0.9, 0.9, 0.85, 1)
 emission_energy_multiplier = 0.35
 
@@ -125,6 +125,10 @@ size = Vector3(0.4, 0.4, 0.4)
 
 [sub_resource type="BoxShape3D" id="Col_item"]
 size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_stand"]
+albedo_color = Color(0.28, 0.17, 0.09, 1)
+roughness = 0.85
 
 [sub_resource type="BoxMesh" id="Mesh_door"]
 size = Vector3(3.8, 2.6, 0.35)
@@ -1345,12 +1349,12 @@ volume_db = -5
 autoplay = true
 max_distance = 30
 
-[node name="smiler" type="AudioStreamPlayer3D" parent="."]
+[node name="kitchen" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.6, -16)
 stream = ExtResource("e6")
 volume_db = -9
 autoplay = true
-max_distance = 10
+max_distance = 14
 
 [node name="whisper" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 16)
@@ -1359,7 +1363,7 @@ volume_db = -3
 autoplay = false
 max_distance = 26
 
-[node name="laugh" type="AudioStreamPlayer3D" parent="."]
+[node name="breath" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.6, 24)
 stream = ExtResource("e8")
 volume_db = -4
@@ -1439,13 +1443,16 @@ mesh = SubResource("Mesh_plane")
 surface_material_override/0 = SubResource("MatD_Decals_papers_BaseColor")
 
 [node name="l0key" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 0.5, 24)
 script = ExtResource("e17")
 flag_name = "level0_key"
 speech_key = "level0_key_line"
 destroy_on_pick = true
 requires_flag = ""
 add_sanity = 0
+second_key = ""
+second_flag = ""
+death_key = ""
 [node name="CollisionShape3D" type="CollisionShape3D" parent="l0key"]
 shape = SubResource("Col_item")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="l0key"]
@@ -1460,13 +1467,16 @@ scale = Vector2(0.06, 0.06)
 texture = ExtResource("e18")
 
 [node name="photo" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.5, 24)
 script = ExtResource("e17")
 flag_name = "level0_photo_seen"
 speech_key = "level0_photo"
 destroy_on_pick = false
 requires_flag = ""
 add_sanity = 0
+second_key = ""
+second_flag = ""
+death_key = ""
 [node name="CollisionShape3D" type="CollisionShape3D" parent="photo"]
 shape = SubResource("Col_item")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="photo"]
@@ -1481,13 +1491,16 @@ scale = Vector2(0.06, 0.06)
 texture = ExtResource("e18")
 
 [node name="almond" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.5, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.5, 24)
 script = ExtResource("e17")
 flag_name = "level0_water"
 speech_key = "level0_water"
 destroy_on_pick = true
 requires_flag = ""
 add_sanity = 40
+second_key = ""
+second_flag = ""
+death_key = ""
 [node name="CollisionShape3D" type="CollisionShape3D" parent="almond"]
 shape = SubResource("Col_item")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="almond"]
@@ -1502,13 +1515,16 @@ scale = Vector2(0.06, 0.06)
 texture = ExtResource("e18")
 
 [node name="nest" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 0.5, -16)
 script = ExtResource("e17")
 flag_name = "level0_nest_seen"
 speech_key = "level0_nest"
 destroy_on_pick = false
 requires_flag = ""
 add_sanity = 0
+second_key = ""
+second_flag = ""
+death_key = ""
 [node name="CollisionShape3D" type="CollisionShape3D" parent="nest"]
 shape = SubResource("Col_item")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="nest"]
@@ -1616,7 +1632,7 @@ speech_key = "level0_1"
 script = ExtResource("e22")
 flicker_light = NodePath("../lamp10/OmniLight3D")
 whisper_player = NodePath("../whisper")
-growl_player = NodePath("../laugh")
+growl_player = NodePath("../breath")
 surface = "wood"
 drain_sanity = true
 sanity_rate = 0.35

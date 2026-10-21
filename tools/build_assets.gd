@@ -16,6 +16,8 @@ const MESH := "res://assets/backrooms/meshes/"
 const LOOP_KEYS := [
 	"547799", "Ambient01", "Ambient_Danger", "smiler_idle_drone",
 	"amb_underground_room", "537769", "generator-off",
+	# otelden tureyen arc sesleri: mutfak uguldu ve kalp atimi dongulu olmali
+	"kitchen_hum", "slow_heartbeat",
 ]
 
 var VS: Array[Vector3] = []

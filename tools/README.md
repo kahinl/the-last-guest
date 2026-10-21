@@ -16,6 +16,22 @@ ilgili script, grid değişince üreteç** çalışmalı.
 | `test_flagpush.tscn` | `requires_flag` itmesini doğrular: bayrak yazılınca nesne görünür olmalı | `godot --headless --path . tools/test_flagpush.tscn` |
 | `test_monster.tscn` / `test_reset2.tscn` | canavar aktivasyonu + ölüm akışı / ölüm sonrası sahne sıfırlama | `godot --headless --path . tools/test_monster.tscn` |
 | `test_entity.tscn` | varlığın **ses-güdümlü** davranışını doğrular: sessizken uyanmıyor, gürültüyle yaklaşıyor, susunca duruyor ve çekiliyor. `_process` elle adimlandigi icin cihaz fps'inden bagimsiz | `godot --headless --path . tools/test_entity.tscn` |
+| `test_hubnote.tscn` | misafir defterinin üç okumasını doğrular (`hub_note` / `hub_note_2` / ölümden sonra `hub_note_dead`) | `godot --headless --path . tools/test_hubnote.tscn` |
+
+---
+
+## 0. Araç yazarken iki tuzak (bu depoda üç kez yakalandı)
+
+1. **`get_tree().root.add_child(...)` kendi `_ready()` içinde çağrılırsa sessizce
+   başarısız olur** (`Parent node is busy setting up children`). Sahne ağaca
+   girmediği için düğümlerin `global_position`'ı `(0,0,0)` kalır, test "doğru"
+   sonuç verir ama hiçbir şey test edilmemiştir. **Önce `await
+   get_tree().process_frame`.** Aynı nedenledir ki boş bir `CanvasLayer`'ı
+   xvfb'de çekince kare tek renkte çıkıyordu — araç hatası değil, koşum hatasıydı.
+2. **Çıktıyı `grep ^PROBE` gibi bir kalıpla süzersen `SCRIPT ERROR` satırları
+   kaybolur.** `player.gd`'nin hiç derlenmemesi böyle günlerce görülmeyebilmişti.
+   Doğrulamada en az bir tur `grep -E "SCRIPT ERROR|Parse Error|Failed to load"`
+   da koşulmalı; bu depo artık temizken o sayı **0** olmalı.
 
 ---
 

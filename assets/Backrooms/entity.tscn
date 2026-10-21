@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Scripts/backrooms_entity.gd" id="e0"]
 [ext_resource type="Resource" path="res://assets/backrooms/meshes/monster.mesh.res" id="e1"]
 [ext_resource type="Resource" path="res://assets/backrooms/textures/Zombie_Body_Diffuse.res" id="e2"]
-[ext_resource type="Resource" path="res://assets/backrooms/audio/175210__minigunfiend__creatures-loud-buzz.ogg.res" id="e3"]
-[ext_resource type="Resource" path="res://assets/backrooms/audio/Mutant_Scream.ogg.res" id="e4"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/voice_trying.ogg.res" id="e3"]
+[ext_resource type="Resource" path="res://assets/backrooms/audio/kettle_scream.ogg.res" id="e4"]
 [ext_resource type="Resource" path="res://assets/backrooms/textures/VHS_Monster.res" id="e5"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_body"]
