@@ -8,6 +8,10 @@ linux.export/
 *.gltf
 *.fbx
 *.obj
+# ...ama backrooms varlik hatti icin src/ altindaki OBJ girdileri SART:
+# build_assets.gd bunlari .res mesh'e ceviriyor. Ignored kalirlarsa sifirdan
+# klonlanmis bir depo mesh'leri yeniden uretemez (4 dosya boyle eksikti).
+!assets/backrooms/src/**/*.obj
 *.pck
 *.exe
 /build/
