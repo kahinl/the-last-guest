@@ -117,6 +117,32 @@ Not: `--script` modunda autoload'lar (GameState/FadeLayer/Wind) mevcut **olmadı
 her script "Identifier not found: GameState" verir — bu **yanlış pozitiftir**; gerçek
 oyunda (yukarıdaki komut) temiz derlenir. Gerçek hata ararken bu satırları yok say.
 
+### CI / build (GitHub Actions)
+
+`main`'e her push `.github/workflows/build.yml`'i tetikler. İki job da
+`ubuntu-latest` üzerinde headless Godot ile **import + export** yapar:
+
+| Job | Ne yapar | Artifact |
+|---|---|---|
+| `android` | disk temizliği → import → debug keystore ile imzalı APK | `TheLastGuest-android` |
+| `windows` | `*.import` içinde `etc2_astc → s3tc_bptc` (`build.yml:21`) → import → masaüstü build | `TheLastGuest-windows` |
+
+Bu önemli: **bu cihazda açılamayan editör/içe-alma adımı CI'da koşuyor.** Yani depoyu
+bozan bir içe alma hatası ya da eksik girdi dosyası en geç orada patlar — bu yüzden
+`src/obj`'in `.gitignore`'da olduğunu fark edip düzelttik (olsaydı CI değil, ama
+yeni bir klon üretemezdi). Windows job'ının format çevirmesi ayrıca şu anlama
+geliyor: `project.godot`'ta S3TC'yi kapatmaya gerek yok, masaüstü build kendi
+formatını build anında alıyor (madde 10'daki gerekçe buna düzeltildi).
+
+    export HOME=/data/data/com.termux/files/home   # gh kimliği burada, /root'ta DEGIL
+    gh run list --limit 5
+    gh run watch <run-id> --exit-status
+    gh run download <run-id>
+
+`gh auth status` `/root` HOME'uyla "not logged in" der — **yanıltıcı**; oturum
+Termux'un gerçek home'unda (`/data/data/com.termux/files/home/.config/gh`).
+Son yeşil build: `39545256502` (commit `51f5550`), android + windows, ~4½ dk.
+
 ---
 
 ## The Backrooms 1998'den çevrilen varlıklar
@@ -363,16 +389,17 @@ o günki hâle göre.
     kapsül-durağın geometri için kullanılıyor (specülatif, ana iş parçacığı maliyeti);
     `:19` boş ses yolu düzeni (her ses Master'da).
     **KARAR: hicbiri degistirilmedi** (2026-10-20 akşamı, gerekçeleriyle):
-    · S3TC/BPTC kapatmak ithalat isini yariya indirir AMA (a) Windows/itch export'u
-    hâlâ planlanmis bir madde (G32) ve masaustu S3TC ister, (b) bu cihazda editor
-    `--import`'ta coktugu icin ithalat zaten kosulamiyor — yani olculebilir kazanc
-    yok, geri donuslu zarar riski var. · Jolt'tan geri almak carpisma davranisini
-    degistirir (otel taranmis geometri + kapisma spawn'lari yeni dogruladi),
-    speculatif bir kazanic icin risk alinmadi. · `mode=4` Android'de yok sayiliyor,
-    masaustunde ise gercek bir davranis degisikligi; tek basina dokunulmadi.
-    · `default_bus_layout=""` bir kusur degil: Godot'nun yerlesik tek Master yolu
-    demek. Gercekten cok yollu duzen istenirse ekilecek bir dosya, silinecek bir
-    satir degil.
+    · S3TC/BPTC kapatmak ithalat isini yariya indirir AMA bu gerekce yanlismis:
+    Windows export'u `project.godot`'daki aya degil, CI'a bagli — `build.yml:21`
+    windows job'inda `*.import` dosyalarini `etc2_astc -> s3tc_bptc` olarak
+    yeniden yaziyor. Yani depo telefon icin ETC2/ASTC'de kaliyor, masaustu build
+    kendi formatini build aninda aliyor. `project.godot`'a dokunmak bu yuzden
+    gereksiz VE zararli olurdu. · Jolt degisikligi yeni dogrulanan carpisma/spawn
+    davranisini riske atar, speculatif bir kazanic icin risk alinmadi.
+    · `mode=4` Android'de yok sayiliyor, masaustunde ise gercek bir davranis
+    degisikligi; tek basina dokunulmadi. · `default_bus_layout=""` bir kusur
+    degil: Godot'nun yerlesik tek Master yolu demek. Gercekten cok yollu duzen
+    istenirse ekilecek bir dosya, silinecek bir satir degil.
 
 ### C. İş/araç tarafında kalanlar
 
